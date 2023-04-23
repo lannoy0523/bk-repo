@@ -1,0 +1,59 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("@rules_spring//springboot:springboot.bzl", "springboot")
+load("@io_bazel_rules_kotlin//kotlin:core.bzl", "define_kt_toolchain")
+
+define_kt_toolchain(
+    name = "kotlin_toolchain",
+    api_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+    jvm_target = "1.8", # "1.6", "1.8", "9", "10", "11", "12", "13", "15", "16", or "17"
+    language_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+deps = [
+    "//composer/biz-composer:biz-composer-lib",
+]
+
+runtime_deps = [
+    "@maven//:org_jetbrains_annotations",
+    "@maven//:org_jetbrains_kotlin_kotlin_reflect",
+    "@maven//:org_jetbrains_kotlin_kotlin_stdlib_common",
+    "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+    "@com_github_jetbrains_kotlin//:kotlin-stdlib",
+    "@com_github_jetbrains_kotlin//:kotlin-stdlib-jdk7",
+    "@com_github_jetbrains_kotlin//:kotlin-stdlib-jdk8",
+]
+
+kt_jvm_library(
+    name = "boot-composer-lib",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+    ]),
+    resources = glob([
+        "src/main/resources/**",
+    ]),
+    runtime_deps = runtime_deps,
+    deps = deps,
+)
+
+kt_jvm_binary(
+    name = "boot-composer",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+    ]),
+    main_class = "com.tencent.bkrepo.composer.ComposerApplicationKt",
+    resources = glob([
+        "src/main/resources/**",
+    ]),
+    deps = [":boot-auth-lib"],
+)
+
+springboot(
+    name = "ComposerApplication-boot",
+    boot_app_class = "com.tencent.bkrepo.composer.ComposerApplicationKt",
+    java_library = ":boot-composer-lib",
+    deps = deps + runtime_deps,
+    fail_on_duplicate_classes = False,
+)

@@ -1,0 +1,4 @@
+module(
+    name = "artifact-service",
+    version = "0.0.1"
+)

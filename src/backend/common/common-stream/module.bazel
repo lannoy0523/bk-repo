@@ -1,0 +1,5 @@
+module(
+    name = "common-stream",
+    version = "0.0.1"
+)
+

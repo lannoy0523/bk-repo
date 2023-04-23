@@ -1,0 +1,4 @@
+module(
+    name = "boot_npm",
+    version = "0.0.1"
+)

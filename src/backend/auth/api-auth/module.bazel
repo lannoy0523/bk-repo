@@ -1,0 +1,4 @@
+module(
+    name = "api_auth",
+    version = "0.0.1"
+)

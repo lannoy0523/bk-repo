@@ -1,0 +1,32 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_import")
+load("@io_bazel_rules_kotlin//kotlin:core.bzl", "define_kt_toolchain")
+define_kt_toolchain(
+    name = "kotlin_toolchain",
+    api_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+    jvm_target = "1.8", # "1.6", "1.8", "9", "10", "11", "12", "13", "15", "16", or "17"
+    language_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+deps = [
+    "@maven//:org_yaml_snakeyaml",
+    "@maven//:com_github_zafarkhaja_java_semver",
+    "//rds/api-rds:api-rds-lib",
+    "//common/common-job:common-job-lib",
+    "//common/common-lock:common-lock-lib",
+    "//common/common-artifact/artifact-service:artifact-service-lib",
+]
+
+kt_jvm_library(
+    name = "biz-rds-lib",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+    ]),
+    resources = glob([
+        "src/main/resources/**",
+    ]),
+    deps = deps,
+)

@@ -1,0 +1,4 @@
+module(
+    name = "boot_generic",
+    version = "0.0.1"
+)

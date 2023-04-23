@@ -1,0 +1,4 @@
+module(
+    name = "api_nuget",
+    version = "0.0.1"
+)

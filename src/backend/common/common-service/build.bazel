@@ -1,0 +1,44 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("@io_bazel_rules_kotlin//kotlin:core.bzl", "define_kt_toolchain")
+
+define_kt_toolchain(
+    name = "kotlin_toolchain",
+    api_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+    jvm_target = "1.8", # "1.6", "1.8", "9", "10", "11", "12", "13", "15", "16", or "17"
+    language_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+deps = [
+    "@maven//:com_tencent_devops_devops_circuitbreaker",
+    "@maven//:com_tencent_devops_devops_service",
+    "@maven//:io_github_resilience4j_resilience4j_bulkhead",
+    "@maven//:io_micrometer_micrometer_registry_influx",
+    "@maven//:io_jsonwebtoken_jjwt_api",
+    "@maven//:io_jsonwebtoken_jjwt_impl",
+    "@maven//:io_jsonwebtoken_jjwt_jackson",
+    "@maven//:com_google_guava_guava",
+    "@maven//:org_springframework_cloud_spring_cloud_starter_sleuth",
+    "@maven//:org_springframework_cloud_spring_cloud_sleuth_otel_autoconfigure",
+    "@maven//:io_opentelemetry_opentelemetry_exporter_otlp",
+    "@maven//:io_opentelemetry_opentelemetry_sdk_extension_resources",
+    "@maven//:org_springframework_cloud_spring_cloud_commons",
+    "@maven//:org_springframework_spring_context",
+    "@maven//:org_springframework_spring_web",
+    "@maven//:org_springframework_cloud_spring_cloud_loadbalancer",
+    "//common/common-mongo:common-mongo-lib",
+    "//common/common-api:common-api-lib",
+]
+
+kt_jvm_library(
+    name = "common-service-lib",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+    ]),
+    resources = glob([
+        "src/main/resources/**",
+    ]),
+    deps = deps,
+)

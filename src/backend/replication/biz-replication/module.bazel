@@ -1,0 +1,4 @@
+module(
+    name = "biz_replication",
+    version = "0.0.1"
+)

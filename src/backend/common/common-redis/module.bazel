@@ -1,0 +1,4 @@
+module(
+    name = "common_redis",
+    version = "0.0.1"
+)

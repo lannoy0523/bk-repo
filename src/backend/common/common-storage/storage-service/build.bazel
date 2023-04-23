@@ -1,0 +1,46 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("@io_bazel_rules_kotlin//kotlin:core.bzl", "define_kt_toolchain")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_import")
+
+define_kt_toolchain(
+    name = "kotlin_toolchain",
+    api_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+    jvm_target = "1.8", # "1.6", "1.8", "9", "10", "11", "12", "13", "15", "16", or "17"
+    language_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+)
+
+kt_jvm_import(
+    name = "storage-service-import-lib",
+    jars = ["lib/cl5-java-sdk-1.0.0.jar"],
+)
+
+package(default_visibility = ["//visibility:public"])
+
+deps = [
+    "@maven//:com_google_guava_guava",
+    "@maven//:org_springframework_retry_spring_retry",
+    "@maven//:org_springframework_boot_spring_boot_starter_aop",
+    "@maven//:commons_io_commons_io",
+    "@maven//:commons_codec_commons_codec",
+    "@maven//:com_amazonaws_aws_java_sdk_s3",
+    "@maven//:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
+    "@maven//:com_tencent_polaris_polaris_discovery_factory",
+    "@maven//:com_squareup_okhttp3_okhttp",
+    "//common/common-api:common-api-lib",
+    "//common/common-bksync:common-bksync-lib",
+    "//common/common-storage/storage-api:storage-api-lib",
+    "//common/common-artifact/artifact-api:artifact-api-lib",
+    ":storage-service-import-lib",
+]
+
+kt_jvm_library(
+    name = "storage-service-lib",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+    ]),
+    resources = glob([
+        "src/main/resources/**",
+    ]),
+    deps = deps,
+)

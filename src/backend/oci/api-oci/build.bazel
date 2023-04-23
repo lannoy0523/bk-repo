@@ -1,0 +1,32 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_import")
+load("@io_bazel_rules_kotlin//kotlin:core.bzl", "define_kt_toolchain")
+define_kt_toolchain(
+    name = "kotlin_toolchain",
+    api_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+    jvm_target = "1.8", # "1.6", "1.8", "9", "10", "11", "12", "13", "15", "16", or "17"
+    language_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+deps = [
+    "@maven//:org_springframework_spring_web",
+    "@maven//:com_github_zafarkhaja_java_semver",
+    "//common/common-artifact/artifact-api:artifact-api-lib",
+    "//common/common-artifact/artifact-service:artifact-service-lib",
+    "//common/common-api:common-api-lib",
+    "//repository/api-repository:api-repository-lib",
+]
+
+kt_jvm_library(
+    name = "api-oci-lib",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+    ]),
+    resources = glob([
+        "src/main/resources/**",
+    ]),
+    deps = deps,
+)

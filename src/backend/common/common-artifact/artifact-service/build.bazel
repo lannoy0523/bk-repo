@@ -1,0 +1,42 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("@io_bazel_rules_kotlin//kotlin:core.bzl", "define_kt_toolchain")
+
+define_kt_toolchain(
+    name = "kotlin_toolchain",
+    api_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+    jvm_target = "1.8", # "1.6", "1.8", "9", "10", "11", "12", "13", "15", "16", or "17"
+    language_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+deps = [
+    "@maven//:org_mockito_kotlin_mockito_kotlin",
+    "@maven//:io_mockk_mockk",
+    "@maven//:org_apache_commons_commons_text",
+    "@maven//:org_springframework_boot_spring_boot_starter_aop",
+    "@maven//:org_influxdb_influxdb_java",
+    "@maven//:io_micrometer_micrometer_registry_prometheus",
+    "//repository/api-repository:api-repository-lib",
+    "//auth/api-auth:api-auth-lib",
+    "//replication/api-replication:api-replication-lib",
+    "//fs/api-fs-server:api-fs-server-lib",
+    "//common/common-service:common-service-lib",
+    "//common/common-security:common-security-lib",
+    "//common/common-artifact/artifact-api:artifact-api-lib",
+    "//common/common-storage/storage-service:storage-service-lib",
+    "//common/common-operate/operate-service:operate-service-lib",
+    "//common/common-stream:common-stream-lib",
+]
+
+kt_jvm_library(
+    name = "artifact-service-lib",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+    ]),
+    resources = glob([
+        "src/main/resources/**",
+    ]),
+    deps = deps,
+)

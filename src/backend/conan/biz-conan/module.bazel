@@ -1,0 +1,4 @@
+module(
+    name = "biz_conan",
+    version = "0.0.1"
+)

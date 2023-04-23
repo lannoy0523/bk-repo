@@ -1,0 +1,5 @@
+module(
+    name = "boot_conan",
+    version = "0.0.1"
+)
+

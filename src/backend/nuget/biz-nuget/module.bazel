@@ -1,0 +1,4 @@
+module(
+    name = "biz_nuget",
+    version = "0.0.1"
+)

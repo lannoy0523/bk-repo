@@ -1,0 +1,4 @@
+module(
+    name = "boot_webhook",
+    version = "0.0.1"
+)

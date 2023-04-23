@@ -1,0 +1,4 @@
+module(
+    name = "biz_generic",
+    version = "0.0.1"
+)

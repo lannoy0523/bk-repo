@@ -1,0 +1,4 @@
+module(
+    name = "operate-annotation",
+    version = "0.0.1"
+)

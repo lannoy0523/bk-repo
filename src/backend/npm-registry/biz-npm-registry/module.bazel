@@ -1,0 +1,4 @@
+module(
+    name = "biz-npm-registry",
+    version = "0.0.1"
+)

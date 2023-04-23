@@ -1,0 +1,32 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("@io_bazel_rules_kotlin//kotlin:core.bzl", "define_kt_toolchain")
+
+define_kt_toolchain(
+    name = "kotlin_toolchain",
+    api_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+    jvm_target = "1.8", # "1.6", "1.8", "9", "10", "11", "12", "13", "15", "16", or "17"
+    language_version = "1.4",  # "1.1", "1.2", "1.3", "1.4", "1.5" "1.6", or "1.7"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+deps = [
+    "@maven//:me_champeau_gradle_jmh_me_champeau_gradle_jmh_gradle_plugin",
+    "@maven//:com_google_guava_guava",
+    "@maven//:com_squareup_okhttp3_okhttp",
+    "@maven//:ch_qos_logback_logback_classic",
+    "@maven//:com_squareup_okhttp3_okhttp_sse",
+    "//common/common-api:common-api-lib"
+]
+
+kt_jvm_library(
+    name = "common-bksync-lib",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+    ]),
+    resources = glob([
+        "src/main/resources/**",
+    ]),
+    deps = deps,
+)

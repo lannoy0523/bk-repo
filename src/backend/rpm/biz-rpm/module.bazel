@@ -1,0 +1,6 @@
+module(
+    name = "biz-rpm",
+    version = "0.0.1"
+)
+
+
