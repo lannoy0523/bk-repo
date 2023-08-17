@@ -29,8 +29,7 @@ class NodeStatCompositeMongoDbBatchJob(
 
     override fun createChildJobs(): List<ChildMongoDbBatchJob<Node>> {
         return listOf(
-            ProjectRepoStatChildJob(properties, mongoTemplate),
-            FolderStatChildJob(properties, mongoTemplate)
+            ProjectRepoStatChildJob(properties, mongoTemplate)
         )
     }
 
@@ -69,7 +68,7 @@ class NodeStatCompositeMongoDbBatchJob(
             path = map[Node::path.name] as String
             fullPath = map[Node::fullPath.name] as String
             name = map[Node::name.name] as String
-            size = map[Node::size.name].toString().toLong()
+            size = map[Node::size.name] as Long
             // 查询出的deleted默认为Date类型
             deleted = map[Node::deleted.name] as Date?
             projectId = map[Node::projectId.name] as String

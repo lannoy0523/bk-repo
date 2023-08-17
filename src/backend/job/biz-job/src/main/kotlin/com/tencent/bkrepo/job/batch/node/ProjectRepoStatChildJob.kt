@@ -25,9 +25,7 @@ class ProjectRepoStatChildJob(
             return
         }
         val metric = context.metrics.getOrPut(row.projectId) { ProjectRepoChildContext.ProjectMetrics(row.projectId) }
-        if (!row.folder) {
-            metric.capSize.add(row.size)
-        }
+        metric.capSize.add(row.size)
         metric.nodeNum.increment()
         metric.addRepoMetrics(row)
     }
