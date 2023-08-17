@@ -101,6 +101,19 @@
                             </scan-tag>
                         </template>
                     </bk-table-column>
+                    <bk-table-column :label="$t('size')" width="90" show-overflow-tooltip>
+                        <template #default="{ row }">
+                            <bk-button text
+                                v-if="row.folder && !('folderSize' in row)"
+                                :disabled="row.sizeLoading"
+                                @click="calculateFolderSize(row)">{{ $t('calculate') }}</bk-button>
+                            <span v-else>
+                                {{ convertFileSize(row.size || row.folderSize || 0) }}
+                            </span>
+                        </template>
+                    </bk-table-column>
+                    <bk-table-column :label="$t('fileNum')" prop="nodeNum" show-overflow-tooltip></bk-table-column>
+
 
                     <bk-table-column :label="$t('metadata')">
                         <template #default="{ row }">
@@ -121,17 +134,6 @@
                     <bk-table-column :label="$t('lastModifiedBy')" width="150" show-overflow-tooltip>
                         <template #default="{ row }">
                             {{ userList[row.lastModifiedBy] ? userList[row.lastModifiedBy].name : row.lastModifiedBy }}
-                        </template>
-                    </bk-table-column>
-                    <bk-table-column :label="$t('size')" width="90" show-overflow-tooltip>
-                        <template #default="{ row }">
-                            <bk-button text
-                                v-if="row.folder && !('folderSize' in row)"
-                                :disabled="row.sizeLoading"
-                                @click="calculateFolderSize(row)">{{ $t('calculate') }}</bk-button>
-                            <span v-else>
-                                {{ convertFileSize(row.size || row.folderSize || 0) }}
-                            </span>
                         </template>
                     </bk-table-column>
                     <bk-table-column :label="$t('operation')" width="100">

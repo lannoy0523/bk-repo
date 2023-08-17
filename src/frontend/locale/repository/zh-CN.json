@@ -771,5 +771,6 @@
     "batchDownloadingInfo":"您批量选中的文件正在进行下载中，请稍候...",
     "errorPlanNameTips":"请输入 2-32 位字符的计划名称",
     "noBusinessTip": "无业务权限",
-    "noBusinessSubTip": "无该应用访问权限"
+    "noBusinessSubTip": "无该应用访问权限",
+    "fileNum": "文件个数"
 }
