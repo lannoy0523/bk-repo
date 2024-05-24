@@ -10,18 +10,36 @@
         <div style="display: flex">
             <div class="ml10 mr10 mt10" style="width: 50%; text-align: center">
                 <div>
+                    <div style="display: flex;margin-bottom: 10px;justify-content: space-between;">
+                        <bk-input v-model="importTitle" readonly :placeholder="$t('search')" style="width: 290px" @change="filterUsers" />
+                        <bk-button class="ml10" theme="primary" @click="openImport = true" style="margin-right: auto">{{ '导入' }}</bk-button>
+                    </div>
                     <div style="align-items: center">
+                        <bk-select style="width: 360px;margin-bottom: 10px"
+                            searchable
+                            multiple
+                            selected-style="checkbox"
+                            @change="changeOp"
+                            v-if="openImport"
+                            v-model="multipleValue">
+                            <bk-option v-for="option in importDate"
+                                :key="option.roleId"
+                                :id="option.roleId"
+                                :name="option.name">
+                            </bk-option>
+                        </bk-select>
                         <bk-input :type="'textarea'" :placeholder="$t('userGroupPlaceholder')" v-model="editUserConfig.newUser" class="w350 usersTextarea" />
                     </div>
-                    <div class="mt5" style="display: flex">
-                        <div class="mr10" style="text-align: left">
-                            <bk-button style="width: 240px" theme="primary" @click="parseFn">{{ $t('add') }}</bk-button>
-                        </div>
-                        <div style="text-align: left">
-                            <bk-button style="width: 110px" @click="editUserConfig.newUser = ''">{{ $t('clear') }}</bk-button>
-                        </div>
+                </div>
+                <div class="mt5" style="display: flex">
+                    <div class="mr10" style="text-align: left">
+                        <bk-button style="width: 240px" theme="primary" @click="parseFn">{{ $t('add') }}</bk-button>
+                    </div>
+                    <div style="text-align: left">
+                        <bk-button style="width: 110px" @click="editUserConfig.newUser = ''">{{ $t('clear') }}</bk-button>
                     </div>
                 </div>
+
             </div>
             <div class="ml10 mr10 mt10" style="width: 50%;text-align: center">
                 <div style="display: flex">
@@ -65,13 +83,84 @@
                     search: '',
                     newUser: '',
                     originUsers: []
-                }
+                },
+                multipleValue: [],
+                openImport: false,
+                importTitle: '蓝盾用户导入',
+                importDate: [
+                    {
+                        name: 'CI管理员',
+                        roleId: '46636',
+                        userList: [
+                            'royalhuang',
+                            'felixncheng',
+                            'sawyersong',
+                            'fayewang'
+                        ]
+                    },
+                    {
+                        name: '访客',
+                        roleId: '14500',
+                        userList: []
+                    },
+                    {
+                        name: '测试人员',
+                        roleId: '14499',
+                        userList: []
+                    },
+                    {
+                        name: '质管人员',
+                        roleId: '14493',
+                        userList: []
+                    },
+                    {
+                        name: '产品人员',
+                        roleId: '14475',
+                        userList: []
+                    },
+                    {
+                        name: '运维人员',
+                        roleId: '14455',
+                        userList: []
+                    },
+                    {
+                        name: '开发人员',
+                        roleId: '14418',
+                        userList: [
+                            'hieiwang',
+                            'felixncheng',
+                            'v_hwweng',
+                            'jamikxu',
+                            'zacyanliu',
+                            'kunlongli',
+                            'yaoxuwan',
+                            'stubenhuang',
+                            'owenlxu'
+                        ]
+                    },
+                    {
+                        name: '管理员',
+                        roleId: '14417',
+                        userList: [
+                            'zanyzhao',
+                            'owenlxu',
+                            'brandonliu',
+                            'irwinsun'
+                        ]
+                    }
+                ]
             }
         },
         watch: {
             visible: function (newVal) {
                 if (newVal) {
                     this.showDialog = true
+                    this.editUserConfig = {
+                        users: this.showData.users,
+                        search: '',
+                        newUser: '',
+                        originUsers: this.showData.originUsers
+                    }
                 } else {
                     this.cancel()
                 }
@@ -86,6 +175,7 @@
             },
             parseFn () {
                 const data = this.editUserConfig.newUser
+                this.multipleValue = []
                 if (data !== '') {
                     const temp = []
                     this.editUserConfig.search = ''
@@ -136,6 +226,20 @@
                 this.showDialog = false
                 this.$emit('update:visible', false)
                 this.$emit('complete', this.editUserConfig.originUsers)
+            },
+            changeOp (newVal, oldVal) {
+                let text = ''
+                for (let i = 0; i < this.importDate.length; i++) {
+                    if (newVal.includes(this.importDate[i].roleId)) {
+                        console.log(this.importDate[i].userList.join('\n'))
+                        if (text === '' || this.importDate[i].userList.length === 0) {
+                            text = text + this.importDate[i].userList.join('\n')
+                        } else {
+                            text = text + '\n' + this.importDate[i].userList.join('\n')
+                        }
+                    }
+                }
+                this.editUserConfig.newUser = text
             }
         }
     }

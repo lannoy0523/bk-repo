@@ -2,6 +2,7 @@
     <div class="role-container" v-bkloading="{ isLoading }">
         <div class="ml20 mr20 mt10 flex-between-center">
             <bk-button icon="plus" theme="primary" @click="createRoleHandler">{{ $t('create') }}</bk-button>
+            <bk-button icon="plus" theme="primary" @click="createRoleHandler">{{ '蓝盾导入' }}</bk-button>
         </div>
         <bk-table
             class="mt10 role-table"
@@ -49,6 +50,31 @@
                 </bk-form-item>
                 <bk-form-item :label="$t('description')">
                     <bk-input type="textarea" v-model.trim="editRoleConfig.description" maxlength="200"></bk-input>
+                </bk-form-item>
+                <bk-form-item label="蓝盾用户组">
+                    <div style="display: flex">
+                        <bk-button icon="plus" @click="openImport = true">{{ '导入' }}</bk-button>
+                        <bk-select style="width: 360px;margin-left: 10px"
+                            searchable
+                            multiple
+                            selected-style="checkbox"
+                            @change="changeOp"
+                            v-if="openImport"
+                            v-model="multipleValue">
+                            <bk-option v-for="option in importDate"
+                                :key="option.roleId"
+                                :id="option.roleId"
+                                :name="option.name">
+                            </bk-option>
+                        </bk-select>
+                    </div>
+                    <div v-show="importUsers.length" class="mt10 user-list">
+                        <div class="pl10 pr10 user-item flex-between-center" v-for="(user, index) in importUsers" :key="index">
+                            <div class="flex-align-center">
+                                <span class="user-name text-overflow" :title="user">{{ user }}</span>
+                            </div>
+                        </div>
+                    </div>
                 </bk-form-item>
                 <bk-form-item :label="$t('staffing')">
                     <bk-button icon="plus" @click="showAddDialog">{{ $t('add') + $t('space') + $t('user') }}</bk-button>
@@ -105,7 +131,71 @@
                     ]
                 },
                 showAddUserDialog: false,
-                showData: {}
+                showData: {},
+                openImport: false,
+                importUsers: [],
+                importDate: [
+                    {
+                        name: 'CI管理员',
+                        roleId: '46636',
+                        userList: [
+                            'royalhuang',
+                            'felixncheng',
+                            'sawyersong',
+                            'fayewang'
+                        ]
+                    },
+                    {
+                        name: '访客',
+                        roleId: '14500',
+                        userList: []
+                    },
+                    {
+                        name: '测试人员',
+                        roleId: '14499',
+                        userList: []
+                    },
+                    {
+                        name: '质管人员',
+                        roleId: '14493',
+                        userList: []
+                    },
+                    {
+                        name: '产品人员',
+                        roleId: '14475',
+                        userList: []
+                    },
+                    {
+                        name: '运维人员',
+                        roleId: '14455',
+                        userList: []
+                    },
+                    {
+                        name: '开发人员',
+                        roleId: '14418',
+                        userList: [
+                            'hieiwang',
+                            'felixncheng',
+                            'v_hwweng',
+                            'jamikxu',
+                            'zacyanliu',
+                            'kunlongli',
+                            'yaoxuwan',
+                            'stubenhuang',
+                            'owenlxu'
+                        ]
+                    },
+                    {
+                        name: '管理员',
+                        roleId: '14417',
+                        userList: [
+                            'zanyzhao',
+                            'owenlxu',
+                            'brandonliu',
+                            'irwinsun'
+                        ]
+                    }
+                ]
             }
         },
         computed: {
@@ -252,6 +342,16 @@
             handleAddUsers (users) {
                 this.editRoleConfig.originUsers = users
                 this.editRoleConfig.users = users
+            },
+            changeOp (newVal, oldVal) {
+                this.importUsers = []
+                for (let i = 0; i < this.importDate.length; i++) {
+                    if (newVal.includes(this.importDate[i].roleId)) {
+                        console.log(this.importDate[i].userList)
+                        this.importUsers = this.importUsers.concat(this.importDate[i].userList)
+                    }
+                }
+                this.importUsers = Array.from(new Set(this.importUsers))
             }
         }
     }
