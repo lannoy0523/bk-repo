@@ -2,7 +2,6 @@
     <div class="role-container" v-bkloading="{ isLoading }">
         <div class="ml20 mr20 mt10 flex-between-center">
             <bk-button icon="plus" theme="primary" @click="createRoleHandler">{{ $t('create') }}</bk-button>
-            <bk-button icon="plus" theme="primary" @click="createRoleHandler">{{ '蓝盾导入' }}</bk-button>
         </div>
         <bk-table
             class="mt10 role-table"

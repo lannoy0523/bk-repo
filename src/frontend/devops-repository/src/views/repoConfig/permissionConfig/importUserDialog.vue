@@ -12,7 +12,7 @@
                 <div>
                     <div style="display: flex;margin-bottom: 10px;justify-content: space-between;">
                         <bk-input v-model="importTitle" readonly :placeholder="$t('search')" style="width: 290px" @change="filterUsers" />
-                        <bk-button class="ml10" theme="primary" @click="openImport = true" style="margin-right: auto">{{ '导入' }}</bk-button>
+                        <bk-button class="ml10" theme="primary" @click="openImport = true">{{ '导入' }}</bk-button>
                     </div>
                     <div style="align-items: center">
                         <bk-select style="width: 360px;margin-bottom: 10px"
