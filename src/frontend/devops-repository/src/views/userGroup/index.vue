@@ -2,7 +2,6 @@
     <div class="role-container" v-bkloading="{ isLoading }">
         <div class="ml20 mr20 mt10 flex-between-center">
             <bk-button icon="plus" theme="primary" @click="createRoleHandler">{{ $t('create') }}</bk-button>
-            <bk-button icon="plus" theme="primary" @click="createRoleHandler">{{ '蓝盾导入' }}</bk-button>
         </div>
         <bk-table
             class="mt10 role-table"
@@ -51,16 +50,15 @@
                 <bk-form-item :label="$t('description')">
                     <bk-input type="textarea" v-model.trim="editRoleConfig.description" maxlength="200"></bk-input>
                 </bk-form-item>
-                <bk-form-item label="蓝盾用户组">
+                <bk-form-item :label="$t('bkciUserGroup')">
                     <div style="display: flex">
-                        <bk-button icon="plus" @click="openImport = true">{{ '导入' }}</bk-button>
+                        <bk-button icon="plus" @click="getUserFromBk">{{ $t('import') }}</bk-button>
                         <bk-select style="width: 360px;margin-left: 10px"
                             searchable
                             multiple
                             selected-style="checkbox"
                             @change="changeOp"
-                            v-if="openImport"
-                            v-model="multipleValue">
+                            v-if="openImport">
                             <bk-option v-for="option in importDate"
                                 :key="option.roleId"
                                 :id="option.roleId"
@@ -134,68 +132,7 @@
                 showData: {},
                 openImport: false,
                 importUsers: [],
-                importDate: [
-                    {
-                        name: 'CI管理员',
-                        roleId: '46636',
-                        userList: [
-                            'royalhuang',
-                            'felixncheng',
-                            'sawyersong',
-                            'fayewang'
-                        ]
-                    },
-                    {
-                        name: '访客',
-                        roleId: '14500',
-                        userList: []
-                    },
-                    {
-                        name: '测试人员',
-                        roleId: '14499',
-                        userList: []
-                    },
-                    {
-                        name: '质管人员',
-                        roleId: '14493',
-                        userList: []
-                    },
-                    {
-                        name: '产品人员',
-                        roleId: '14475',
-                        userList: []
-                    },
-                    {
-                        name: '运维人员',
-                        roleId: '14455',
-                        userList: []
-                    },
-                    {
-                        name: '开发人员',
-                        roleId: '14418',
-                        userList: [
-                            'hieiwang',
-                            'felixncheng',
-                            'v_hwweng',
-                            'jamikxu',
-                            'zacyanliu',
-                            'kunlongli',
-                            'yaoxuwan',
-                            'stubenhuang',
-                            'owenlxu'
-                        ]
-                    },
-                    {
-                        name: '管理员',
-                        roleId: '14417',
-                        userList: [
-                            'zanyzhao',
-                            'owenlxu',
-                            'brandonliu',
-                            'irwinsun'
-                        ]
-                    }
-                ]
+                importDate: []
             }
         },
         computed: {
@@ -220,7 +157,8 @@
                 'createRole',
                 'editRole',
                 'deleteRole',
-                'getProjectUserList'
+                'getProjectUserList',
+                'getUserGroupByBk'
             ]),
             getRoleListHandler () {
                 this.isLoading = true
@@ -259,6 +197,8 @@
             async confirm () {
                 await this.$refs.roleForm.validate()
                 this.editRoleConfig.loading = true
+                let users = this.editRoleConfig.originUsers.concat(this.importUsers)
+                users = new Array(new Set(users))
                 const fn = this.editRoleConfig.id ? this.editRole : this.createRole
                 fn({
                     id: this.editRoleConfig.id,
@@ -269,7 +209,7 @@
                         projectId: this.projectId,
                         admin: false,
                         description: this.editRoleConfig.description,
-                        userIds: this.editRoleConfig.originUsers
+                        userIds: users
                     }
                 }).then(res => {
                     if (!this.editRoleConfig.id && this.editRoleConfig.users.length > 0) {
@@ -284,6 +224,7 @@
                                 message: (this.editRoleConfig.id ? this.$t('editUserGroupTitle') : this.$t('addUserGroupTitle')) + this.$t('space') + this.$t('success')
                             })
                             this.editRoleConfig.show = false
+                            this.openImport = false
                             this.getRoleListHandler()
                         })
                         return
@@ -318,6 +259,7 @@
             },
             cancel () {
                 this.editRoleConfig.show = false
+                this.openImport = false
                 this.getRoleListHandler()
             },
             deleteUser (index) {
@@ -352,6 +294,14 @@
                     }
                 }
                 this.importUsers = Array.from(new Set(this.importUsers))
+            },
+            getUserFromBk () {
+                this.openImport = true
+                this.getUserGroupByBk({
+                    projectId: this.projectId
+                }).then(res => {
+                    this.importDate = res
+                })
             }
         }
     }

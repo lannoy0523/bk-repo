@@ -12,7 +12,7 @@
                 <div>
                     <div style="display: flex;margin-bottom: 10px;justify-content: space-between;">
                         <bk-input v-model="importTitle" readonly :placeholder="$t('search')" style="width: 290px" @change="filterUsers" />
-                        <bk-button class="ml10" theme="primary" @click="openImport = true" style="margin-right: auto">{{ '导入' }}</bk-button>
+                        <bk-button class="ml10" theme="primary" @click="getUserFromBk">{{ this.$t('import') }}</bk-button>
                     </div>
                     <div style="align-items: center">
                         <bk-select style="width: 360px;margin-bottom: 10px"
@@ -65,6 +65,7 @@
 
 <script>
     import { copyToClipboard } from '@/utils'
+    import { mapActions } from 'vuex'
 
     export default {
         name: 'addUserDialog',
@@ -86,69 +87,8 @@
                 },
                 multipleValue: [],
                 openImport: false,
-                importTitle: '蓝盾用户导入',
-                importDate: [
-                    {
-                        name: 'CI管理员',
-                        roleId: '46636',
-                        userList: [
-                            'royalhuang',
-                            'felixncheng',
-                            'sawyersong',
-                            'fayewang'
-                        ]
-                    },
-                    {
-                        name: '访客',
-                        roleId: '14500',
-                        userList: []
-                    },
-                    {
-                        name: '测试人员',
-                        roleId: '14499',
-                        userList: []
-                    },
-                    {
-                        name: '质管人员',
-                        roleId: '14493',
-                        userList: []
-                    },
-                    {
-                        name: '产品人员',
-                        roleId: '14475',
-                        userList: []
-                    },
-                    {
-                        name: '运维人员',
-                        roleId: '14455',
-                        userList: []
-                    },
-                    {
-                        name: '开发人员',
-                        roleId: '14418',
-                        userList: [
-                            'hieiwang',
-                            'felixncheng',
-                            'v_hwweng',
-                            'jamikxu',
-                            'zacyanliu',
-                            'kunlongli',
-                            'yaoxuwan',
-                            'stubenhuang',
-                            'owenlxu'
-                        ]
-                    },
-                    {
-                        name: '管理员',
-                        roleId: '14417',
-                        userList: [
-                            'zanyzhao',
-                            'owenlxu',
-                            'brandonliu',
-                            'irwinsun'
-                        ]
-                    }
-                ]
+                importTitle: this.$t('importBkTitle'),
+                importDate: []
             }
         },
         watch: {
@@ -167,6 +107,9 @@
             }
         },
         methods: {
+            ...mapActions([
+                'getUserGroupByBk'
+            ]),
             filterUsers () {
                 this.editUserConfig.users = this.editUserConfig.originUsers
                 if (this.editUserConfig.search !== '') {
@@ -240,6 +183,14 @@
                     }
                 }
                 this.editUserConfig.newUser = text
+            },
+            getUserFromBk () {
+                this.openImport = true
+                this.getUserGroupByBk({
+                    projectId: this.projectId
+                }).then(res => {
+                    this.importDate = res
+                })
             }
         }
     }
