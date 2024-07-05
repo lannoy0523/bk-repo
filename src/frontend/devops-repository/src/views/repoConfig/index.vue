@@ -112,6 +112,9 @@
             <bk-tab-panel render-directive="if" v-if="showPermissionConfigTab" name="permissionConfig" :label="$t('permissionConfig')">
                 <permission-config :base-data="repoBaseInfo" @refresh="getRepoInfoHandler"></permission-config>
             </bk-tab-panel>
+            <bk-tab-panel render-directive="if" name="repoPermissionConfig" label="仓库权限">
+                <repo-permission-config :base-data="repoBaseInfo" @refresh="getRepoInfoHandler"></repo-permission-config>
+            </bk-tab-panel>
         </bk-tab>
         <iam-deny-dialog :visible.sync="showIamDenyDialog" :show-data="showData"></iam-deny-dialog>
     </div>
@@ -122,6 +125,7 @@
     import iamDenyDialog from '@repository/components/IamDenyDialog/IamDenyDialog'
     import permissionConfig from './permissionConfig/permissionConfig'
     import cleanConfig from '@repository/views/repoConfig/cleanConfig'
+    import repoPermissionConfig from '@repository/views/repoConfig/repoPermissionConfig'
     import { mapState, mapActions } from 'vuex'
     import { specialRepoEnum } from '@repository/store/publicEnum'
     export default {
@@ -131,6 +135,7 @@
             proxyConfig,
             iamDenyDialog,
             permissionConfig,
+            repoPermissionConfig,
             cleanConfig
         },
         data () {
