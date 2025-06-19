@@ -76,6 +76,7 @@
     "lodash": "^4.17.21",
     "micromatch": "^4.0.8",
     "svg-sprite-loader/**/micromatch": "^4.0.8",
+    "svg-sprite-loader/**/braces": "3.0.3",
     "webpack-dev-server": "^5.2.2"
   }
 }
