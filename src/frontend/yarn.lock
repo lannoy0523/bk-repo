@@ -2419,7 +2419,7 @@
   resolved "https://registry.npmjs.org/@vue/cli-plugin-vuex/-/cli-plugin-vuex-5.0.8.tgz"
   integrity sha512-HSYWPqrunRE5ZZs8kVwiY6oWcn95qf/OQabwLfprhdpFWAGtLStShjsGED2aDpSSeGAskQETrtR/5h7VqgIlBA==
 
-"@vue/cli-service@~5.0.8":
+"@vue/cli-service@5", "@vue/cli-service@~5.0.8":
   version "5.0.8"
   resolved "https://registry.npmjs.org/@vue/cli-service/-/cli-service-5.0.8.tgz"
   integrity sha512-nV7tYQLe7YsTtzFrfOMIHc5N2hp5lHG2rpYr0aNja9rNljdgcPZLyQRb2YRivTHqTv7lI962UXFURcpStHgyFw==
@@ -2480,7 +2480,7 @@
     webpack-virtual-modules "^0.4.2"
     whatwg-fetch "^3.6.2"
 
-"@vue/cli-shared-utils@^5.0.8":
+"@vue/cli-shared-utils@5", "@vue/cli-shared-utils@^5.0.8":
   version "5.0.8"
   resolved "https://registry.npmjs.org/@vue/cli-shared-utils/-/cli-shared-utils-5.0.8.tgz"
   integrity sha512-uK2YB7bBVuQhjOJF+O52P9yFMXeJVj7ozqJkwYE9PlMHL1LMHjtCYm4cSdOebuPzyP+/9p0BimM/OqxsevIopQ==
