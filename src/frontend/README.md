@@ -5,6 +5,7 @@
 ``` bash
 # install dependencies
 yarn install
+yarn start
 
 # build for production with minification
 yarn public
