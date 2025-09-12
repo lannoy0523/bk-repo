@@ -30,6 +30,7 @@ package com.tencent.bkrepo.opdata.registry
 import com.tencent.bkrepo.opdata.registry.spring.EnvLabelConfig
 import com.tencent.bkrepo.opdata.registry.spring.SpringCloudServiceDiscovery
 import okhttp3.OkHttpClient
+import org.slf4j.LoggerFactory
 import org.springframework.cloud.client.discovery.DiscoveryClient
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
@@ -79,6 +80,8 @@ class ServiceDiscoveryConfig (
 
     @Bean
     fun springCloudRegistryClient(discoveryClient: DiscoveryClient): RegistryClient {
+        logger.info("envLabelConfig.labelValue is" + envLabelConfig.labelValue)
+        logger.info("envLabelConfig.labelName is" + envLabelConfig.labelName)
         return SpringCloudServiceDiscovery(discoveryClient, envLabelConfig)
     }
 
@@ -88,5 +91,6 @@ class ServiceDiscoveryConfig (
 
     companion object {
         private const val CONSUL_NAME= "consul"
+        private val logger = LoggerFactory.getLogger(ServiceDiscoveryConfig::class.java)
     }
 }
