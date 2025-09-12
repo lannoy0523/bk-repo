@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
  * 区分环境用的label
  */
 @Component
-@ConfigurationProperties("release.name")
+@ConfigurationProperties("env.label")
 class EnvLabelConfig (
     val labelName: String ="app.kubernetes.io/instance",
     val labelValue: String = ""
