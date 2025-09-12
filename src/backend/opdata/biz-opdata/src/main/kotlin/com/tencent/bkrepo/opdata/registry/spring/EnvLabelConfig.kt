@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 @ConfigurationProperties("release.name")
-class PodLabelConfig (
+class EnvLabelConfig (
     val labelName: String ="app.kubernetes.io/instance",
     val labelValue: String = ""
 )

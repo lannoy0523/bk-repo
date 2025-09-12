@@ -41,7 +41,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient
  */
 class SpringCloudServiceDiscovery(
   private val discoveryClient: DiscoveryClient,
-  private val podLabelConfig: PodLabelConfig
+  private val envLabelConfig: EnvLabelConfig
 ): RegistryClient {
 
   data class ServiceDetails(
@@ -74,12 +74,12 @@ class SpringCloudServiceDiscovery(
   private fun matchService( details: List<ServiceDetails>): List<ServiceDetails> {
     var targetDetails = details
     logger.info("details is $details")
-    logger.info("podLabelConfig.labelValue is" + podLabelConfig.labelValue)
-    logger.info("podLabelConfig.labelName is" + podLabelConfig.labelName)
-    if (podLabelConfig.labelValue.isNotBlank() && podLabelConfig.labelName.isNotBlank()) {
+    logger.info("podLabelConfig.labelValue is" + envLabelConfig.labelValue)
+    logger.info("podLabelConfig.labelName is" + envLabelConfig.labelName)
+    if (envLabelConfig.labelValue.isNotBlank() && envLabelConfig.labelName.isNotBlank()) {
       targetDetails = details.filter {
         it.details.any { serviceInstance ->
-          serviceInstance.metadata[podLabelConfig.labelName].equals(podLabelConfig.labelValue) }
+          serviceInstance.metadata[envLabelConfig.labelName].equals(envLabelConfig.labelValue) }
       }
     }
     return targetDetails
@@ -88,9 +88,9 @@ class SpringCloudServiceDiscovery(
   private fun matchInstance(serviceName: String) : List<ServiceInstance> {
     val instances = discoveryClient.getInstances(serviceName)
     var matchResult = true
-    if (podLabelConfig.labelValue.isNotBlank() && podLabelConfig.labelName.isNotBlank()) {
+    if (envLabelConfig.labelValue.isNotBlank() && envLabelConfig.labelName.isNotBlank()) {
       matchResult = instances.any { serviceInstance ->
-        serviceInstance.metadata[podLabelConfig.labelName].equals(podLabelConfig.labelValue) }
+        serviceInstance.metadata[envLabelConfig.labelName].equals(envLabelConfig.labelValue) }
     }
     return if (matchResult) instances else emptyList()
 

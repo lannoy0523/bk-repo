@@ -27,7 +27,7 @@
 
 package com.tencent.bkrepo.opdata.registry
 
-import com.tencent.bkrepo.opdata.registry.spring.PodLabelConfig
+import com.tencent.bkrepo.opdata.registry.spring.EnvLabelConfig
 import com.tencent.bkrepo.opdata.registry.spring.SpringCloudServiceDiscovery
 import okhttp3.OkHttpClient
 import org.springframework.cloud.client.discovery.DiscoveryClient
@@ -45,7 +45,7 @@ class ServiceDiscoveryConfig (
     private val discoveryClient: DiscoveryClient,
     private val httpClient: OkHttpClient,
     private val ctx: ApplicationContext,
-    private val podLabelConfig: PodLabelConfig
+    private val envLabelConfig: EnvLabelConfig
 ){
 
     class ConsulClassesCondition : Condition {
@@ -79,7 +79,7 @@ class ServiceDiscoveryConfig (
 
     @Bean
     fun springCloudRegistryClient(discoveryClient: DiscoveryClient): RegistryClient {
-        return SpringCloudServiceDiscovery(discoveryClient, podLabelConfig)
+        return SpringCloudServiceDiscovery(discoveryClient, envLabelConfig)
     }
 
     fun isConsulEnabled(): Boolean {
