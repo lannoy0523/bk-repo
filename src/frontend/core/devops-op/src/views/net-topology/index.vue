@@ -3,8 +3,8 @@
     <div v-loading="g_loading" style="width: calc(100% - 2px);height:calc(100vh);">
       <RelationGraph ref="graphRef" :options="userGraphOptions">
         <template #node="{node}">
-          <div v-if="node.data.type === 'idc-service1'" style="display: flex; justify-content: center; align-items: center">
-            <div style="text-align: center;" @mouseover="showNodeTips(node, $event)" @mouseout="hideNodeTips(node, $event)">
+          <div v-if="node.data.type === 'idc-service1'" style="display: flex; justify-content: center; align-items: center" @click="showNodeTips(node, $event)">
+            <div style="text-align: center;" @mouseout="hideNodeTips(node, $event)">
               {{ node.text }}
             </div>
           </div>
@@ -220,18 +220,16 @@ export default {
     },
     setGraphData() {
       this.dealJson()
-      setTimeout(() => {
-        this.g_loading = false
-        this.$refs.graphRef.setJsonData(this.targetJson, (graphInstance) => {
-          const nodes = graphInstance.getNodes()
-          nodes.forEach(node => {
-            if (this.targetJson.nodes.some(n => n.fixed && n.id === node.id)) {
-              node.x = graphInstance.graphData.rootNode.x + node.x
-              node.y = graphInstance.graphData.rootNode.y + node.y
-            }
-          })
+      this.g_loading = false
+      this.$refs.graphRef.setJsonData(this.targetJson, (graphInstance) => {
+        const nodes = graphInstance.getNodes()
+        nodes.forEach(node => {
+          if (this.targetJson.nodes.some(n => n.fixed && n.id === node.id)) {
+            node.x = graphInstance.graphData.rootNode.x + node.x
+            node.y = graphInstance.graphData.rootNode.y + node.y
+          }
         })
-      }, 1000)
+      })
     },
     showNodeTips(nodeObject, $event) {
       this.currentNode = nodeObject
