@@ -1,18 +1,32 @@
 <template>
-  <div>
+  <div ref="mypage">
     <div v-loading="g_loading" style="width: calc(100% - 2px);height:calc(100vh);">
-      <RelationGraph ref="graphRef" :options="userGraphOptions" />
+      <RelationGraph ref="graphRef" :options="userGraphOptions">
+        <template #node="{node}">
+          <div v-if="node.data.type === 'idc-service1'" style="display: flex; justify-content: center; align-items: center">
+            <div style="text-align: center;" @mouseover="showNodeTips(node, $event)" @mouseout="hideNodeTips(node, $event)">
+              {{ node.text }}
+            </div>
+          </div>
+        </template>
+      </RelationGraph>
+      <div v-if="isShowNodeTipsPanel" :style="{left: nodeMenuPanelPosition.x + 'px', top: nodeMenuPanelPosition.y + 'px' }" style="z-index: 999;padding:10px;background-color: #ffffff;border:#eeeeee solid 1px;box-shadow: 0px 0px 8px #cccccc;position: absolute;">
+        <div style="line-height: 25px;padding-left: 10px;color: #888888;font-size: 12px;">Service总集</div>
+        <div class="c-node-menu-item">id:{{ currentNode.text }}</div>
+      </div>
     </div>
+    <detail-dialog :visible.sync="showDialog" />
   </div>
 </template>
 
 <script>
 // 如果您没有在main.js文件中使用Vue.use(RelationGraph); 就需要使用下面这一行代码来引入relation-graph
 import RelationGraph from 'relation-graph'
+import DetailDialog from '@/views/net-topology/components/detail.vue'
 
 export default {
   name: 'NT',
-  components: { RelationGraph },
+  components: { DetailDialog, RelationGraph },
   data() {
     return {
       data: [
@@ -22,15 +36,9 @@ export default {
           { name: 'gateway<br>devx.bkrepo.woa.com', desc: '' }
         ] },
         { name: 'gateway<br>bkrepo.woa.com', subset: [
-          { name: 'IDC service1', desc: '' },
-          { name: 'IDC service2', desc: '' }
+          { name: 'IDC service', desc: '' }
         ] },
-        { name: 'IDC service1', subset: [
-          { name: 'IDC storage1', desc: '' },
-          { name: 'IDC storage2', desc: '' },
-          { name: 'IDC storageN', desc: '' }
-        ] },
-        { name: 'IDC service2', subset: [
+        { name: 'IDC service', subset: [
           { name: 'IDC storage1', desc: '' },
           { name: 'IDC storage2', desc: '' },
           { name: 'IDC storageN', desc: '' }
@@ -89,8 +97,23 @@ export default {
         'nodes': [],
         'lines': []
       },
+      showDialog: false,
+      isShowCodePanel: false,
+      isShowNodeTipsPanel: false,
+      nodeMenuPanelPosition: { x: 0, y: 0 },
+      currentNode: {},
       g_loading: true,
       userGraphOptions: {
+        moveToCenterWhenRefresh: true,
+        zoomToFitWhenRefresh: true,
+        // defaultLineShape: 4,
+        placeOtherGroup: true,
+        defaultNodeWidth: 150,
+        defaultNodeHeight: 30,
+        // debug: true,
+        // defaultExpandHolderPosition: 'right',
+        reLayoutWhenExpandedOrCollapsed: true,
+        useAnimationWhenExpanded: true,
         backgrounImage: '',
         backgrounImageNoRepeat: true,
         layout:
@@ -131,6 +154,11 @@ export default {
           nodeShape: 1,
           width: 150,
           height: 50
+        }
+        if (this.data[i].name === 'IDC service') {
+          node.data = {
+            type: 'idc-service1'
+          }
         }
         let expand = false
         let hasMulti = false
@@ -193,6 +221,18 @@ export default {
           })
         })
       }, 1000)
+    },
+    showNodeTips(nodeObject, $event) {
+      this.currentNode = nodeObject
+      const _base_position = this.$refs.graphRef.getInstance().options.fullscreen ? { x: 0, y: 0 } : this.$refs.mypage.getBoundingClientRect()
+      console.log('showNodeMenus:', this.$refs.graphRef.getInstance().options.fullscreen, $event.clientX, $event.clientY, _base_position)
+      this.isShowNodeTipsPanel = true
+      this.nodeMenuPanelPosition.x = $event.clientX - _base_position.x + 10
+      this.nodeMenuPanelPosition.y = $event.clientY - _base_position.y + 10
+      this.showDialog = true
+    },
+    hideNodeTips(nodeObject, $event) {
+      this.isShowNodeTipsPanel = false
     }
   }
 }
