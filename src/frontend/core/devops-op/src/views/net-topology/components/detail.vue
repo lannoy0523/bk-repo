@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="Service详情" :visible.sync="showDialog" :before-close="close">
+  <el-dialog :title="title" :visible.sync="showDialog" :before-close="close">
     <div style="width: calc(100% - 2px);height:calc(100vh);">
       <RelationGraph ref="graphRef1" :options="userGraphOptions" />
     </div>
@@ -13,14 +13,26 @@ export default {
   name: 'DetailDialog',
   components: { RelationGraph },
   props: {
-    visible: Boolean
+    visible: Boolean,
     /**
      * 仅在更新模式时有值
      */
+    sub: {
+      type: Array,
+      default: () => []
+    },
+    title: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
       showDialog: this.visible,
+      targetJson: {
+        'nodes': [],
+        'lines': []
+      },
       userGraphOptions: {
         moveToCenterWhenRefresh: true,
         zoomToFitWhenRefresh: true,
@@ -75,38 +87,12 @@ export default {
   },
   methods: {
     setSecondData() {
-      const __graph_json_data = {
-        'nodes': [
-          { 'text': 'Service总线', 'id': 'cron', nodeShape: 1, width: 130, height: 40, color: '#34A0CE' },
-          { 'text': 'Service1', 'id': 'exe-01', nodeShape: 1, width: 130, height: 35 },
-          { 'text': 'Service2', 'id': 'exe-02', nodeShape: 1, width: 130, height: 35 },
-          { 'text': 'Service3', 'id': 'exe-03', nodeShape: 1, width: 130, height: 35 },
-          { 'text': 'Service4', 'id': 'exe-04', nodeShape: 1, width: 130, height: 35, color: '#34A0CE' },
-          { 'text': 'Service5', 'id': 'exe-05', nodeShape: 1, width: 130, height: 35, color: '#34A0CE' },
-          { 'text': 'Service6', 'id': 'exe-06', nodeShape: 1, width: 130, height: 35 },
-          { 'text': 'Service7', 'id': 'exe-07', nodeShape: 1, width: 130, height: 35 },
-          { 'text': 'Service8', 'id': 'exe-08', nodeShape: 1, width: 130, height: 35, color: '#F56C6C' },
-          { 'text': 'Service9', 'id': 'exe-09', nodeShape: 1, width: 130, height: 35 },
-          { 'text': 'Service10', 'id': 'exe-10', nodeShape: 1, width: 130, height: 35 }
-        ],
-        'lines': [
-          { 'from': 'cron', 'to': 'exe-01', 'text': null },
-          { 'from': 'cron', 'to': 'exe-02', 'text': null },
-          { 'from': 'cron', 'to': 'exe-03', 'text': null },
-          { 'from': 'cron', 'to': 'exe-04', 'text': null },
-          { 'from': 'cron', 'to': 'exe-05', 'text': null },
-          { 'from': 'cron', 'to': 'exe-06', 'text': null },
-          { 'from': 'cron', 'to': 'exe-07', 'text': null },
-          { 'from': 'cron', 'to': 'exe-08', 'text': null },
-          { 'from': 'cron', 'to': 'exe-09', 'text': null },
-          { 'from': 'cron', 'to': 'exe-10', 'text': null }
-        ]
-      }
+      this.makeJson()
       this.$nextTick(() => {
-        this.$refs.graphRef1.setJsonData(__graph_json_data, (graphInstance) => {
+        this.$refs.graphRef1.setJsonData(this.targetJson, (graphInstance) => {
           const nodes = graphInstance.getNodes()
           nodes.forEach(node => {
-            if (__graph_json_data.nodes.some(n => n.fixed && n.id === node.id)) {
+            if (this.targetJson.nodes.some(n => n.fixed && n.id === node.id)) {
               node.x = graphInstance.graphData.rootNode.x + node.x
               node.y = graphInstance.graphData.rootNode.y + node.y
             }
@@ -114,8 +100,38 @@ export default {
         })
       })
     },
+    makeJson() {
+      const mainNode = {
+        text: this.title,
+        id: this.title,
+        nodeShape: 1,
+        width: 130,
+        height: 35,
+        expandHolderPosition: 'bottom'
+      }
+      this.targetJson.nodes.push(mainNode)
+      for (let i = 0; i < this.sub.length; i++) {
+        const node = {
+          text: this.sub[i].name,
+          id: this.sub[i].name,
+          nodeShape: 1,
+          width: 130,
+          height: 35
+        }
+        const line = {
+          from: this.title,
+          to: this.sub[i].name
+        }
+        this.targetJson.nodes.push(node)
+        this.targetJson.lines.push(line)
+      }
+    },
     close() {
       this.showDialog = false
+      this.targetJson = {
+        'nodes': [],
+        'lines': []
+      }
       this.$emit('update:visible', false)
     }
   }

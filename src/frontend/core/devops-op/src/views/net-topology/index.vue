@@ -10,12 +10,8 @@
           </div>
         </template>
       </RelationGraph>
-      <div v-if="isShowNodeTipsPanel" :style="{left: nodeMenuPanelPosition.x + 'px', top: nodeMenuPanelPosition.y + 'px' }" style="z-index: 999;padding:10px;background-color: #ffffff;border:#eeeeee solid 1px;box-shadow: 0px 0px 8px #cccccc;position: absolute;">
-        <div style="line-height: 25px;padding-left: 10px;color: #888888;font-size: 12px;">Service总集</div>
-        <div class="c-node-menu-item">id:{{ currentNode.text }}</div>
-      </div>
     </div>
-    <detail-dialog :visible.sync="showDialog" />
+    <detail-dialog :visible.sync="showDialog" :sub="sub" :title="title" />
   </div>
 </template>
 
@@ -38,16 +34,30 @@ export default {
         { name: 'gateway<br>bkrepo.woa.com', subset: [
           { name: 'IDC service', desc: '' }
         ] },
-        { name: 'IDC service', subset: [
+        { name: 'IDC service', hasIgnore: true, subset: [
+          { name: 'IDC storage', desc: '' }
+        ], ignoreSub: [
+          { name: 'IDC service1', desc: '' },
+          { name: 'IDC service2', desc: '' },
+          { name: 'IDC service3', desc: '' }
+        ] },
+        { name: 'IDC storage', hasIgnore: true, subset: [
+        ], ignoreSub: [
           { name: 'IDC storage1', desc: '' },
           { name: 'IDC storage2', desc: '' },
+          { name: 'IDC storage3', desc: '' },
+          { name: 'IDC storage4', desc: '' },
+          { name: 'IDC storage5', desc: '' },
+          { name: 'IDC storage6', desc: '' },
+          { name: 'IDC storage7', desc: '' },
+          { name: 'IDC storage8', desc: '' },
+          { name: 'IDC storage9', desc: '' },
+          { name: 'IDC storage10', desc: '' },
+          { name: 'IDC storage11', desc: '' },
+          { name: 'IDC storage12', desc: '' },
+          { name: 'IDC storage13', desc: '' },
+          { name: 'IDC storage14', desc: '' },
           { name: 'IDC storageN', desc: '' }
-        ] },
-        { name: 'IDC storage1', subset: [
-        ] },
-        { name: 'IDC storage2', subset: [
-        ] },
-        { name: 'IDC storageN', subset: [
         ] },
         { name: 'gateway<br>devnet.bkrepo.woa.com', subset: [
           { name: 'DEVNET service1', desc: '' }
@@ -98,6 +108,8 @@ export default {
         'lines': []
       },
       showDialog: false,
+      sub: [],
+      title: '',
       isShowCodePanel: false,
       isShowNodeTipsPanel: false,
       nodeMenuPanelPosition: { x: 0, y: 0 },
@@ -146,7 +158,6 @@ export default {
   methods: {
     dealJson() {
       const relation = this.findNodesWithMultipleParents(this.data)
-      console.log(relation)
       for (let i = 0; i < this.data.length; i++) {
         const node = {
           text: this.data[i].name,
@@ -155,9 +166,10 @@ export default {
           width: 150,
           height: 50
         }
-        if (this.data[i].name === 'IDC service') {
+        if (this.data[i].hasIgnore) {
           node.data = {
-            type: 'idc-service1'
+            type: 'idc-service1',
+            sub: this.data[i].ignoreSub
           }
         }
         let expand = false
@@ -208,7 +220,6 @@ export default {
     },
     setGraphData() {
       this.dealJson()
-      console.log(this.targetJson)
       setTimeout(() => {
         this.g_loading = false
         this.$refs.graphRef.setJsonData(this.targetJson, (graphInstance) => {
@@ -224,11 +235,9 @@ export default {
     },
     showNodeTips(nodeObject, $event) {
       this.currentNode = nodeObject
-      const _base_position = this.$refs.graphRef.getInstance().options.fullscreen ? { x: 0, y: 0 } : this.$refs.mypage.getBoundingClientRect()
-      console.log('showNodeMenus:', this.$refs.graphRef.getInstance().options.fullscreen, $event.clientX, $event.clientY, _base_position)
-      this.isShowNodeTipsPanel = true
-      this.nodeMenuPanelPosition.x = $event.clientX - _base_position.x + 10
-      this.nodeMenuPanelPosition.y = $event.clientY - _base_position.y + 10
+      console.log(nodeObject)
+      this.sub = nodeObject.data.sub
+      this.title = nodeObject.text
       this.showDialog = true
     },
     hideNodeTips(nodeObject, $event) {
