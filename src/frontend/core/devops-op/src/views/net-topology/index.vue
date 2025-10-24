@@ -19,6 +19,7 @@
 // 如果您没有在main.js文件中使用Vue.use(RelationGraph); 就需要使用下面这一行代码来引入relation-graph
 import RelationGraph from 'relation-graph'
 import DetailDialog from '@/views/net-topology/components/detail.vue'
+import { credentials } from '@/api/storage'
 
 export default {
   name: 'NT',
@@ -43,21 +44,21 @@ export default {
         ] },
         { name: 'IDC storage', hasIgnore: true, subset: [
         ], ignoreSub: [
-          { name: 'IDC storage1', desc: '' },
-          { name: 'IDC storage2', desc: '' },
-          { name: 'IDC storage3', desc: '' },
-          { name: 'IDC storage4', desc: '' },
-          { name: 'IDC storage5', desc: '' },
-          { name: 'IDC storage6', desc: '' },
-          { name: 'IDC storage7', desc: '' },
-          { name: 'IDC storage8', desc: '' },
-          { name: 'IDC storage9', desc: '' },
-          { name: 'IDC storage10', desc: '' },
-          { name: 'IDC storage11', desc: '' },
-          { name: 'IDC storage12', desc: '' },
-          { name: 'IDC storage13', desc: '' },
-          { name: 'IDC storage14', desc: '' },
-          { name: 'IDC storageN', desc: '' }
+          // { name: 'IDC storage1', desc: '' },
+          // { name: 'IDC storage2', desc: '' },
+          // { name: 'IDC storage3', desc: '' },
+          // { name: 'IDC storage4', desc: '' },
+          // { name: 'IDC storage5', desc: '' },
+          // { name: 'IDC storage6', desc: '' },
+          // { name: 'IDC storage7', desc: '' },
+          // { name: 'IDC storage8', desc: '' },
+          // { name: 'IDC storage9', desc: '' },
+          // { name: 'IDC storage10', desc: '' },
+          // { name: 'IDC storage11', desc: '' },
+          // { name: 'IDC storage12', desc: '' },
+          // { name: 'IDC storage13', desc: '' },
+          // { name: 'IDC storage14', desc: '' },
+          // { name: 'IDC storageN', desc: '' }
         ] },
         { name: 'gateway<br>devnet.bkrepo.woa.com', subset: [
           { name: 'DEVNET service1', desc: '' }
@@ -151,11 +152,35 @@ export default {
     }
   },
   created() {
+    this.getStorage()
   },
   mounted() {
     this.setGraphData()
   },
   methods: {
+    getStorage() {
+      credentials().then(res => {
+        console.log(res.data)
+        for (let j = 0; j < this.data.length; j++) {
+          console.log(this.data[j])
+          if (this.data[j].name.includes('storage')) {
+            if (res.data.length > 0) {
+              this.data[j].hasIgnore = true
+            }
+            for (let i = 0; i < res.data.length; i++) {
+              console.log(res.data[i].key)
+              if (this.data[j].ignoreSub) {
+                this.data[j].ignoreSub.push({
+                  name: res.data[i].key,
+                  desc: ''
+                })
+              }
+            }
+          }
+        }
+        console.log(this.data)
+      })
+    },
     dealJson() {
       const relation = this.findNodesWithMultipleParents(this.data)
       for (let i = 0; i < this.data.length; i++) {
@@ -233,7 +258,6 @@ export default {
     },
     showNodeTips(nodeObject, $event) {
       this.currentNode = nodeObject
-      console.log(nodeObject)
       this.sub = nodeObject.data.sub
       this.title = nodeObject.text
       this.showDialog = true
