@@ -3,7 +3,7 @@
     <div v-loading="g_loading" style="width: calc(100% - 2px);height:calc(100vh);">
       <RelationGraph ref="graphRef" :options="userGraphOptions">
         <template #node="{node}">
-          <div v-if="node.data.type === 'idc-service1'" style="display: flex; justify-content: center; align-items: center" @click="showNodeTips(node, $event)">
+          <div v-if="node.data.type === 'idc-service1'" style="display: flex; justify-content: center; align-items: center; height: 100%" @click="showNodeTips(node, $event)">
             <div style="text-align: center;" @mouseout="hideNodeTips(node, $event)">
               {{ node.text }}
             </div>
