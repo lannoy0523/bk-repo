@@ -32,6 +32,11 @@ export default {
           { name: 'gateway<br>devnet.bkrepo.woa.com', desc: '' },
           { name: 'gateway<br>devx.bkrepo.woa.com', desc: '' }
         ] },
+        { name: 'gateway<br>devnet.bkrepo.woa.com', subset: [
+          { name: 'gateway<br>bkrepo.woa.com', desc: '是否IDC流量' },
+          { name: 'gateway<br>devx.bkrepo.woa.com', desc: '是否IDC流量' },
+          { name: 'DEVNET service', desc: '' }
+        ] },
         { name: 'gateway<br>bkrepo.woa.com', subset: [
           { name: 'IDC service', desc: '' }
         ] },
@@ -42,39 +47,24 @@ export default {
           { name: 'IDC service2', desc: '' },
           { name: 'IDC service3', desc: '' }
         ] },
-        { name: 'IDC storage', hasIgnore: true, subset: [
-        ], ignoreSub: [
-          // { name: 'IDC storage1', desc: '' },
-          // { name: 'IDC storage2', desc: '' },
-          // { name: 'IDC storage3', desc: '' },
-          // { name: 'IDC storage4', desc: '' },
-          // { name: 'IDC storage5', desc: '' },
-          // { name: 'IDC storage6', desc: '' },
-          // { name: 'IDC storage7', desc: '' },
-          // { name: 'IDC storage8', desc: '' },
-          // { name: 'IDC storage9', desc: '' },
-          // { name: 'IDC storage10', desc: '' },
-          // { name: 'IDC storage11', desc: '' },
-          // { name: 'IDC storage12', desc: '' },
-          // { name: 'IDC storage13', desc: '' },
-          // { name: 'IDC storage14', desc: '' },
-          // { name: 'IDC storageN', desc: '' }
+        { name: 'IDC storage', subset: [
         ] },
-        { name: 'gateway<br>devnet.bkrepo.woa.com', subset: [
-          { name: 'DEVNET service1', desc: '' }
-        ] },
+
         { name: 'gateway<br>devx.bkrepo.woa.com', subset: [
-          { name: 'DEVX service1', desc: '' }
+          { name: 'DEVX service', desc: '' }
         ] },
-        { name: 'DEVNET service1', subset: [
+        { name: 'DEVNET service', hasIgnore: true, subset: [
           { name: 'DEVNET storage1', desc: '' },
           { name: 'DEVNET storage_1', desc: '' }
+        ], ignoreSub: [
+          { name: 'DEVNET service1', desc: '' },
+          { name: 'DEVNET service_1', desc: '' }
         ] },
         { name: 'DEVNET storage1', subset: [
         ] },
         { name: 'DEVNET storage_1', subset: [
         ] },
-        { name: 'DEVX service1', subset: [
+        { name: 'DEVX service', hasIgnore: true, subset: [
           { name: 'DEVX storage1', desc: '' },
           { name: 'DEVX storage2', desc: '' },
           { name: 'DEVX storage3', desc: '' },
@@ -84,6 +74,10 @@ export default {
           { name: 'DEVX storage7', desc: '' },
           { name: 'DEVX storage8', desc: '' },
           { name: 'DEVX storageN', desc: '' }
+        ], ignoreSub: [
+          { name: 'DEVX service1', desc: '' },
+          { name: 'DEVX service2', desc: '' },
+          { name: 'DEVX service3', desc: '' }
         ] },
         { name: 'DEVX storage1', subset: [
         ] },
@@ -146,39 +140,37 @@ export default {
         defaultNodeShape: 1,
         // 'allowShowMiniToolBar': false,
         useAnimationWhenRefresh: true,
-        defaultJunctionPoint: 'tb',
-        defaultLineShape: 2
+        defaultJunctionPoint: 'border',
+        defaultLineShape: 2,
+        defaultLineColor: '#000000'
       }
     }
   },
   created() {
     this.getStorage()
   },
-  mounted() {
-    this.setGraphData()
-  },
   methods: {
     getStorage() {
       credentials().then(res => {
         console.log(res.data)
         for (let j = 0; j < this.data.length; j++) {
-          console.log(this.data[j])
-          if (this.data[j].name.includes('storage')) {
-            if (res.data.length > 0) {
-              this.data[j].hasIgnore = true
-            }
+          console.log(this.data[j].name)
+          console.log(this.data[j].name === 'IDC service')
+          if (this.data[j].name === 'IDC service') {
             for (let i = 0; i < res.data.length; i++) {
-              console.log(res.data[i].key)
-              if (this.data[j].ignoreSub) {
-                this.data[j].ignoreSub.push({
-                  name: res.data[i].key,
-                  desc: ''
-                })
-              }
+              this.data[j].subset.push({
+                name: res.data[i].key,
+                desc: ''
+              })
+              this.data.push({
+                name: res.data[i].key,
+                subset: []
+              })
             }
           }
         }
         console.log(this.data)
+        this.setGraphData()
       })
     },
     dealJson() {
@@ -208,12 +200,14 @@ export default {
               text: this.data[i].subset[j].desc
             }
             if (relation.get(this.data[i].subset[j].name).size > 1) {
-              line.lineShape = 4
+              line.lineShape = 6
               hasMulti = true
             }
             if (this.data[i].subset[j].desc !== '') {
-              line.animation = 2
-              line.lineShape = 4
+              // line.animation = 1
+              line.lineShape = 6
+              line.useTextPath = true
+              line.color = '#00ced1'
             }
             this.targetJson.lines.push(line)
           }
