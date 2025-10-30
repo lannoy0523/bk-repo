@@ -41,15 +41,11 @@ export default {
           { name: 'IDC service', desc: '' }
         ] },
         { name: 'IDC service', hasIgnore: true, subset: [
-          { name: 'IDC storage', desc: '' }
         ], ignoreSub: [
           { name: 'IDC service1', desc: '' },
           { name: 'IDC service2', desc: '' },
           { name: 'IDC service3', desc: '' }
         ] },
-        { name: 'IDC storage', subset: [
-        ] },
-
         { name: 'gateway<br>devx.bkrepo.woa.com', subset: [
           { name: 'DEVX service', desc: '' }
         ] },
@@ -152,20 +148,19 @@ export default {
   methods: {
     getStorage() {
       credentials().then(res => {
-        console.log(res.data)
         for (let j = 0; j < this.data.length; j++) {
-          console.log(this.data[j].name)
-          console.log(this.data[j].name === 'IDC service')
           if (this.data[j].name === 'IDC service') {
             for (let i = 0; i < res.data.length; i++) {
-              this.data[j].subset.push({
-                name: res.data[i].key,
-                desc: ''
-              })
-              this.data.push({
-                name: res.data[i].key,
-                subset: []
-              })
+              if (res.data[i].region === 'idc') {
+                this.data[j].subset.push({
+                  name: res.data[i].key,
+                  desc: ''
+                })
+                this.data.push({
+                  name: res.data[i].key,
+                  subset: []
+                })
+              }
             }
           }
         }
