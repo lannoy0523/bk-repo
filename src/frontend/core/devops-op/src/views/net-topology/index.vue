@@ -50,54 +50,31 @@ export default {
           { name: 'DEVX service', desc: '' }
         ] },
         { name: 'DEVNET service', hasIgnore: true, subset: [
-          { name: 'DEVNET storage1', desc: '' },
-          { name: 'DEVNET storage_1', desc: '' }
         ], ignoreSub: [
           { name: 'DEVNET service1', desc: '' },
           { name: 'DEVNET service_1', desc: '' }
         ] },
-        { name: 'DEVNET storage1', subset: [
-        ] },
-        { name: 'DEVNET storage_1', subset: [
-        ] },
         { name: 'DEVX service', hasIgnore: true, subset: [
-          { name: 'DEVX storage1', desc: '' },
-          { name: 'DEVX storage2', desc: '' },
-          { name: 'DEVX storage3', desc: '' },
-          { name: 'DEVX storage4', desc: '' },
-          { name: 'DEVX storage5', desc: '' },
-          { name: 'DEVX storage6', desc: '' },
-          { name: 'DEVX storage7', desc: '' },
-          { name: 'DEVX storage8', desc: '' },
-          { name: 'DEVX storageN', desc: '' }
         ], ignoreSub: [
           { name: 'DEVX service1', desc: '' },
           { name: 'DEVX service2', desc: '' },
           { name: 'DEVX service3', desc: '' }
-        ] },
-        { name: 'DEVX storage1', subset: [
-        ] },
-        { name: 'DEVX storage2', subset: [
-        ] },
-        { name: 'DEVX storage3', subset: [
-        ] },
-        { name: 'DEVX storage4', subset: [
-        ] },
-        { name: 'DEVX storage5', subset: [
-        ] },
-        { name: 'DEVX storage6', subset: [
-        ] },
-        { name: 'DEVX storage7', subset: [
-        ] },
-        { name: 'DEVX storage8', subset: [
-        ] },
-        { name: 'DEVX storageN', subset: [
         ] }
       ],
       targetJson: {
         'nodes': [],
         'lines': []
       },
+      services: [
+        'IDC service',
+        'DEVNET service',
+        'DEVX service'
+      ],
+      regins: [
+        'idc',
+        'devnet',
+        'devx'
+      ],
       showDialog: false,
       sub: [],
       title: '',
@@ -149,9 +126,10 @@ export default {
     getStorage() {
       credentials().then(res => {
         for (let j = 0; j < this.data.length; j++) {
-          if (this.data[j].name === 'IDC service') {
+          if (this.services.includes(this.data[j].name)) {
+            const index = this.services.indexOf(this.data[j].name)
             for (let i = 0; i < res.data.length; i++) {
-              if (res.data[i].region === 'idc') {
+              if (res.data[i].region === this.regins[index]) {
                 this.data[j].subset.push({
                   name: res.data[i].key,
                   desc: ''
