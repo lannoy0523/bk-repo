@@ -103,8 +103,8 @@ export default {
             layoutClassName: 'seeks-layout-center',
             from: 'top',
             // 通过这4个属性来调整 tree-层级距离&节点距离
-            min_per_width: 200,
-            max_per_width: 200,
+            min_per_width: 300,
+            max_per_width: 400,
             min_per_height: 40,
             max_per_height: undefined,
             levelDistance: '' // 如果此选项有值，则优先级高于上面那4个选项
