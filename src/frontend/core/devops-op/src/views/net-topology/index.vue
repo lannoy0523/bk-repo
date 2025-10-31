@@ -129,7 +129,7 @@ export default {
           if (this.services.includes(this.data[j].name)) {
             const index = this.services.indexOf(this.data[j].name)
             for (let i = 0; i < res.data.length; i++) {
-              if (res.data[i].region === this.regins[index]) {
+              if (res.data[i].storageRegion === this.regins[index]) {
                 this.data[j].subset.push({
                   name: res.data[i].key,
                   desc: ''
