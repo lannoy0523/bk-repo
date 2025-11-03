@@ -41,11 +41,13 @@ export default {
           { name: 'IDC service', desc: '' }
         ] },
         { name: 'IDC service', hasIgnore: true, subset: [
+          { name: 'default', desc: '' }
         ], ignoreSub: [
           { name: 'IDC service1', desc: '' },
           { name: 'IDC service2', desc: '' },
           { name: 'IDC service3', desc: '' }
         ] },
+        { name: 'default', subset: [] },
         { name: 'gateway<br>devx.bkrepo.woa.com', subset: [
           { name: 'DEVX service', desc: '' }
         ] },
