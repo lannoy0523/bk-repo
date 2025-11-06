@@ -56,7 +56,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 class OpServiceService @Autowired constructor(
-    private val registryClientProvider: ObjectProvider<RegistryClient>,
+    private val registryClient: RegistryClient,
     private val artifactMetricsClient: ArtifactMetricsClient,
     private val pluginClient: PluginClient,
     private val executor: ThreadPoolTaskExecutor,
@@ -66,14 +66,14 @@ class OpServiceService @Autowired constructor(
      * 获取服务列表
      */
     fun listServices(): List<ServiceInfo> {
-        return registryClient().services()
+        return registryClient.services()
     }
 
     /**
      * 获取服务的所有实例
      */
     fun instances(serviceName: String): List<InstanceInfo> {
-        return registryClient().instances(serviceName).map { instance ->
+        return registryClient.instances(serviceName).map { instance ->
             executor.submit<InstanceInfo> {
                 instance.copy(detail = instanceDetail(instance))
             }
@@ -83,7 +83,7 @@ class OpServiceService @Autowired constructor(
     }
 
     fun instance(serviceName: String, instanceId: String): InstanceInfo {
-        val instanceInfo = registryClient().instanceInfo(serviceName, instanceId)
+        val instanceInfo = registryClient.instanceInfo(serviceName, instanceId)
         return instanceInfo.copy(detail = instanceDetail(instanceInfo))
     }
 
@@ -102,7 +102,7 @@ class OpServiceService @Autowired constructor(
      * @param down true: 下线， false: 上线
      */
     fun changeInstanceStatus(serviceName: String, instanceId: String, down: Boolean): InstanceInfo {
-        val instanceInfo = registryClient().maintenance(serviceName, instanceId, down)
+        val instanceInfo = registryClient.maintenance(serviceName, instanceId, down)
         return instanceInfo.copy(detail = instanceDetail(instanceInfo))
     }
 
@@ -242,9 +242,8 @@ class OpServiceService @Autowired constructor(
         )
     }
 
-    private fun registryClient(): RegistryClient {
-        return registryClientProvider.firstOrNull()
-            ?: throw SystemErrorException(OpDataMessageCode.REGISTRY_CLIENT_NOT_FOUND)
+    fun checkConsulAlive() : Boolean {
+        return registryClient.isConsulEnabled()
     }
 
     companion object {
