@@ -12,7 +12,7 @@
       />
       <el-table-column
         v-else
-        prop="name"
+        prop="metadata.name"
         label="配置名"
         width="280"
       />
@@ -52,13 +52,14 @@ export default {
       // this.configs = res.data
       console.log(res)
       this.configs = JSON.parse(res.data)
+      console.log(this.configs)
     })
   },
   methods: {
     init() {
       this.editor = monaco.editor.create(document.getElementById('editor'), {
         value: this.text, // 编辑器初始显示文字
-        language: 'javascript', // 语言
+        language: 'JSON', // 语言
         automaticLayout: true, // 自动布局
         theme: 'vs-dark', // 官方自带三种主题vs, hc-black, or vs-dark
         minimap: { // 关闭小地图
