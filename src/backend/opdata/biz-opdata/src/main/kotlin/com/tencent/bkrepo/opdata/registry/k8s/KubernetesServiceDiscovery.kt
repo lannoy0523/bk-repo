@@ -29,12 +29,12 @@
 package com.tencent.bkrepo.opdata.registry.k8s
 
 import com.tencent.bkrepo.common.api.exception.SystemErrorException
+import com.tencent.bkrepo.common.api.util.toJson
 import com.tencent.bkrepo.opdata.message.OpDataMessageCode
 import com.tencent.bkrepo.opdata.pojo.registry.InstanceInfo
 import com.tencent.bkrepo.opdata.pojo.registry.InstanceStatus
 import com.tencent.bkrepo.opdata.pojo.registry.ServiceInfo
 import com.tencent.bkrepo.opdata.registry.RegistryClient
-import io.fabric8.kubernetes.api.model.NamespaceList
 import io.fabric8.kubernetes.client.KubernetesClientBuilder
 import org.slf4j.LoggerFactory
 import org.springframework.cloud.client.ServiceInstance
@@ -46,7 +46,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient
  */
 class KubernetesServiceDiscovery(
   private val discoveryClient: DiscoveryClient,
-  private val podLabelConfig: PodLabelConfig
+  private val podConfig: PodConfig
 ): RegistryClient {
 
   data class ServiceDetails(
@@ -55,21 +55,18 @@ class KubernetesServiceDiscovery(
   )
 
   override fun configs(): String {
-//    val namespaceList: NamespaceList = KubernetesClientBuilder().build().namespaces().withLabel(podLabelConfig.labelName, podLabelConfig.labelValue).list()
-//    logger.info("namespace list: {}", namespaceList)
     KubernetesClientBuilder().build().use { client ->
       val config = client.configMaps()
-        .inNamespace("dev")
-        .withLabel(podLabelConfig.labelName, podLabelConfig.labelValue)
+        .inNamespace(podConfig.nameSpace)
+        .withLabel(podConfig.labelName, podConfig.labelValue)
         .list()
         .items
       logger.info("configs: {}", config)
+      return toJson(config)
     }
-    return ""
   }
 
   override fun services(): List<ServiceInfo> {
-    this.configs()
     val details = discoveryClient.services.map { ServiceDetails(
       serviceName = it,
       details =  discoveryClient.getInstances(it)
@@ -97,7 +94,7 @@ class KubernetesServiceDiscovery(
     if (hasLabelConfig()) {
       targetDetails = details.filter {
         it.details.any { serviceInstance ->
-          serviceInstance.metadata[podLabelConfig.labelName].equals(podLabelConfig.labelValue) }
+          serviceInstance.metadata[podConfig.labelName].equals(podConfig.labelValue) }
       }
     }
     return targetDetails
@@ -108,16 +105,16 @@ class KubernetesServiceDiscovery(
     var matchResult = true
     if (hasLabelConfig()) {
       matchResult = instances.any { serviceInstance ->
-        serviceInstance.metadata[podLabelConfig.labelName].equals(podLabelConfig.labelValue) }
+        serviceInstance.metadata[podConfig.labelName].equals(podConfig.labelValue) }
     }
     return if (matchResult) instances else emptyList()
 
   }
 
   private fun hasLabelConfig(): Boolean {
-    logger.info("labelName is " + podLabelConfig.labelName)
-    logger.info("labelValue is " + podLabelConfig.labelValue)
-    return podLabelConfig.labelValue.isNotBlank() && podLabelConfig.labelName.isNotBlank()
+    logger.info("labelName is " + podConfig.labelName)
+    logger.info("labelValue is " + podConfig.labelValue)
+    return podConfig.labelValue.isNotBlank() && podConfig.labelName.isNotBlank()
   }
 
   private fun buildInfo(serviceInstance: ServiceInstance, serviceName: String): InstanceInfo {
