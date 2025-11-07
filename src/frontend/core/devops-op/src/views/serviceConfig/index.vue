@@ -74,7 +74,7 @@ export default {
       if (this.isConsul) {
         this.text = row.decodedValue
       } else {
-        this.text = JSON.stringify(row)
+        this.text = JSON.stringify(row, null, 2);
       }
       this.editor.setValue(this.text)
     }
