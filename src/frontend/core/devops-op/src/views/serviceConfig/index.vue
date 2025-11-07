@@ -5,7 +5,14 @@
       style="width: 50%"
     >
       <el-table-column
+        v-if="isConsul"
         prop="key"
+        label="配置名"
+        width="280"
+      />
+      <el-table-column
+        v-else
+        prop="name"
         label="配置名"
         width="280"
       />
@@ -21,7 +28,7 @@
 
 <script>
 
-import { getServicesConfig } from '@/api/service'
+import { checkConsulPattern, getServicesConfig } from '@/api/service'
 import * as monaco from 'monaco-editor'
 
 export default {
@@ -38,9 +45,13 @@ export default {
     this.init()
   },
   created() {
+    checkConsulPattern().then(res => {
+      this.isConsul = res.data
+    })
     getServicesConfig().then(res => {
       // this.configs = res.data
       console.log(res)
+      this.configs = JSON.parse(res.data)
     })
   },
   methods: {
@@ -61,6 +72,8 @@ export default {
       this.editor.setValue('')
       if (this.isConsul) {
         this.text = row.decodedValue
+      } else {
+        this.text = JSON.stringify(row)
       }
       this.editor.setValue(this.text)
     }
