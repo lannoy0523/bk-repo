@@ -55,8 +55,8 @@ class KubernetesServiceDiscovery(
   )
 
   override fun configs(): String {
-    val namespaceList: NamespaceList = KubernetesClientBuilder().build().namespaces().withLabel(podLabelConfig.labelName, podLabelConfig.labelValue).list()
-    logger.info("namespace list: {}", namespaceList)
+//    val namespaceList: NamespaceList = KubernetesClientBuilder().build().namespaces().withLabel(podLabelConfig.labelName, podLabelConfig.labelValue).list()
+//    logger.info("namespace list: {}", namespaceList)
     KubernetesClientBuilder().build().use { client ->
       val config = client.configMaps()
         .inNamespace("dev")
