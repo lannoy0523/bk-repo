@@ -246,6 +246,10 @@ class OpServiceService @Autowired constructor(
         return registryClient.isConsulEnabled()
     }
 
+    fun getConfigs() : String {
+        return registryClient.configs()
+    }
+
     companion object {
         private val logger = LoggerFactory.getLogger(OpServiceService::class.java)
     }
