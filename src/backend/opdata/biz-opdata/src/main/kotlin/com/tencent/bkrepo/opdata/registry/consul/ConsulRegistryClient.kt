@@ -29,6 +29,7 @@ package com.tencent.bkrepo.opdata.registry.consul
 
 import com.tencent.bkrepo.common.api.exception.NotFoundException
 import com.tencent.bkrepo.common.api.util.readJsonString
+import com.tencent.bkrepo.common.api.util.toJsonString
 import com.tencent.bkrepo.opdata.message.OpDataMessageCode.ServiceInstanceNotFound
 import com.tencent.bkrepo.opdata.pojo.registry.InstanceInfo
 import com.tencent.bkrepo.opdata.pojo.registry.InstanceStatus
@@ -39,6 +40,7 @@ import com.tencent.bkrepo.opdata.registry.consul.pojo.ConsulInstanceCheck
 import com.tencent.bkrepo.opdata.registry.consul.pojo.ConsulInstanceCheck.Companion.STATUS_PASSING
 import com.tencent.bkrepo.opdata.registry.consul.pojo.ConsulInstanceHealth
 import com.tencent.bkrepo.opdata.registry.consul.pojo.ConsulInstanceId
+import com.tencent.bkrepo.opdata.registry.consul.pojo.ConsulKeyValue
 import com.tencent.bkrepo.opdata.util.parseResAndThrowExceptionOnRequestFailed
 import com.tencent.bkrepo.opdata.util.requestBuilder
 import com.tencent.bkrepo.opdata.util.throwExceptionOnRequestFailed
@@ -59,8 +61,7 @@ class ConsulRegistryClient constructor(
         return res.use {
             parseResAndThrowExceptionOnRequestFailed(res) { response ->
                 val responseBody = response.body!!.string()
-                logger.info(responseBody)
-                responseBody  // 直接返回
+                responseBody.readJsonString<List<ConsulKeyValue>>().toJsonString()
             }
         }
     }
