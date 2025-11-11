@@ -30,6 +30,7 @@
 
 import { checkConsulPattern, getServicesConfig } from '@/api/service'
 import * as monaco from 'monaco-editor'
+import yaml from 'js-yaml'
 
 export default {
   name: 'Service',
@@ -49,7 +50,6 @@ export default {
       this.isConsul = res.data
     })
     getServicesConfig().then(res => {
-      // this.configs = res.data
       console.log(res)
       this.configs = JSON.parse(res.data)
       console.log(this.configs)
@@ -76,7 +76,8 @@ export default {
       } else {
         const target = row
         const yamlContent = target.data['application.yml']
-        target.data['application.yml'] = yamlContent.replace(/\\n/g, '\n')
+        target.data['application.yml'] = yaml.load(yamlContent)
+        console.log(target)
         this.text = JSON.stringify(target, null, 2)
       }
       this.editor.setValue(this.text)
