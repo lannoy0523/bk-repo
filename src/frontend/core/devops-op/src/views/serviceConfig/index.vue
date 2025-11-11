@@ -74,7 +74,10 @@ export default {
       if (this.isConsul) {
         this.text = row.decodedValue
       } else {
-        this.text = JSON.stringify(row, null, 2);
+        const target = row
+        const yamlContent = target.data['application.yml']
+        target.data['application.yml'] = yamlContent.replace(/\\n/g, '\n')
+        this.text = JSON.stringify(target, null, 2)
       }
       this.editor.setValue(this.text)
     }

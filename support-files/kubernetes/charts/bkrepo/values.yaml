@@ -20,6 +20,10 @@ commonAnnotations: {}
 ##
 rbac:
   create: true
+  rules:
+      - apiGroups: [ "" ]
+        resources: [ "namespaces" ]
+        verbs: [ "get", "list" ]
 
 ## Specifies whether a ServiceAccount should be created
 ##
