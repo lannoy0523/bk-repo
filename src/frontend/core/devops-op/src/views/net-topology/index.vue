@@ -159,7 +159,6 @@ export default {
               to: this.newData[i].subset[j].name,
               text: this.newData[i].subset[j].desc
             }
-            console.log(relation.get(this.newData[i].subset[j].name))
             const parents = relation.get(this.newData[i].subset[j].name)
             // 判断子类是否多父，且父类超过2个是同级的
             if (parents.size > 1 && (
@@ -189,12 +188,14 @@ export default {
       }
     },
     checkHasSameLevelParent(nameSet, objectList) {
-      if (nameSet.size <= 2) return false
+      if (nameSet.size < 2) return false
       const objectNameSet = new Set(objectList.map(obj => obj.name))
       const intersection = new Set(
         [...nameSet].filter(name => objectNameSet.has(name))
       )
-      return intersection.size > 2
+      console.log('-----------------')
+      console.log(intersection)
+      return intersection.size >= 2
     },
     findNodesWithMultipleParents(data) {
       const childToParents = new Map()
