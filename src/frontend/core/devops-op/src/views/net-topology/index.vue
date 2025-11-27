@@ -92,25 +92,28 @@ export default {
       this.gateway = gateway
       for (let i = 0; i < service.length; i++) {
         this.newData.push({
-          name: service[i].name,
+          name: (service[i].tag === '') ? service[i].name : service[i].name + '<br>' + service[i].tag,
           subset: []
         })
       }
       for (let i = 0; i < gateway.length; i++) {
+        const gatewayName = (gateway[i].tag === '') ? gateway[i].name : gateway[i].name + '<br>' + gateway[i].tag
         this.newData.push({
-          name: gateway[i].name,
+          name: gatewayName,
           subset: []
         })
         this.newData[0].subset.push({
-          name: gateway[i].name,
+          name: gatewayName,
           desc: ''
         })
         const relation = (await queryRelationByName(gateway[i].name)).data
         for (let j = 0; j < relation.length; j++) {
-          const index = this.newData.findIndex((e) => e.name === gateway[i].name)
+          const index = this.newData.findIndex((e) => e.name === gatewayName)
+          const next = this.service.findIndex((e) => e.name === relation[j].next) >= 0
+            ? this.service.find((e) => e.name === relation[j].next) : this.gateway.find((e) => e.name === relation[j].next)
           this.newData[index].subset.push({
-            name: relation[j].next,
-            desc: ''
+            name: (next.tag === '') ? next.name : next.name + '<br>' + next.tag,
+            desc: relation[j].forwardTip
           })
         }
       }
@@ -119,10 +122,11 @@ export default {
     getStorage() {
       credentials().then(res => {
         for (let i = 0; i < this.service.length; i++) {
-          const index = this.newData.findIndex((e) => e.name === this.service[i].name)
-          const tag = this.service[i].tag
+          const serviceName = (this.service[i].tag === '') ? this.service[i].name : this.service[i].name + '<br>' + this.service[i].tag
+          const index = this.newData.findIndex((e) => e.name === serviceName)
+          const region = this.service[i].region
           for (let j = 0; j < res.data.length; j++) {
-            if (res.data[j].storageRegion === tag) {
+            if (res.data[j].storageRegion === region) {
               this.newData[index].subset.push({
                 name: res.data[j].key,
                 desc: ''
@@ -136,6 +140,7 @@ export default {
             }
           }
         }
+        console.log(this.newData)
         this.setGraphData()
       })
     },
@@ -193,8 +198,6 @@ export default {
       const intersection = new Set(
         [...nameSet].filter(name => objectNameSet.has(name))
       )
-      console.log('-----------------')
-      console.log(intersection)
       return intersection.size >= 2
     },
     findNodesWithMultipleParents(data) {
