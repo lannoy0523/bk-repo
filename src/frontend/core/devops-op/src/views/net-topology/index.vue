@@ -106,15 +106,19 @@ export default {
           name: gatewayName,
           desc: ''
         })
+        // 现阶段只有gateway有具体关系在此表
         const relation = (await queryRelationByName(gateway[i].name)).data
         for (let j = 0; j < relation.length; j++) {
           const index = this.newData.findIndex((e) => e.name === gatewayName)
           const next = this.service.findIndex((e) => e.name === relation[j].next) >= 0
             ? this.service.find((e) => e.name === relation[j].next) : this.gateway.find((e) => e.name === relation[j].next)
-          this.newData[index].subset.push({
-            name: (next.tag === '') ? next.name : next.name + '<br>' + next.tag,
-            desc: relation[j].forwardTip
-          })
+          if (next) {
+            const nextName = (next.tag === '') ? next.name : next.name + '<br>' + next.tag
+            this.newData[index].subset.push({
+              name: nextName,
+              desc: relation[j].forwardTip
+            })
+          }
         }
       }
       this.getStorage()
@@ -151,7 +155,7 @@ export default {
           text: this.newData[i].name,
           id: this.newData[i].name,
           nodeShape: 1,
-          width: 150,
+          width: 180,
           height: 50
         }
         let expand = false
