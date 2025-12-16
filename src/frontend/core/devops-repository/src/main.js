@@ -1,3 +1,4 @@
+import '../static/webpack_public_path'
 import App from '@/App'
 import createRouter from '@/router'
 import store from '@/store'

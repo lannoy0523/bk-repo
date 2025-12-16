@@ -74,8 +74,14 @@
         // 是否开启多租户模式
         var BK_REPO_ENABLE_MULTI_TENANT_MODE = '__BK_REPO_ENABLE_MULTI_TENANT_MODE__' || 'false'
 
+        // 子路径
+        var BK_REPO_SUBPATH = '/bkrepo'
     </script>
     <script>
+
+        window.BK_REPO_SUBPATH = BK_REPO_SUBPATH === '/' ? '' : BK_REPO_SUBPATH
+        window.BK_STATIC_URL = BK_REPO_SUBPATH === '/' ? '/ui' : BK_REPO_SUBPATH + '/ui'
+
         const inIframe = self !== top
         // iframe内使用ci模式
         if (MODE_CONFIG === 'saas' && inIframe) {
@@ -198,7 +204,62 @@
                 watermark_txt: '  '
             })
         }
+
+        window.__loadAssetsUrl__ = function(src){
+            function joinPath(...paths) {
+                // 过滤 null/undefined
+                const validPaths = paths.filter(p => p != null).map(String);
+
+                if (validPaths.length === 0) return '';
+
+                // 检查是否以根路径开头
+                const startsWithRoot = validPaths[0].startsWith('/');
+
+                // 标准化每个路径片段：移除首尾多余斜杠
+                const normalized = validPaths.map((p, i) => {
+                    if (i === 0) {
+                        // 第一个路径：只移除尾部斜杠（保留开头的 /）
+                        return p.replace(/[\/]+$/, '');
+                    } else {
+                        // 其他路径：移除首尾斜杠
+                        return p.replace(/^[\/]+|[\/]+$/g, '');
+                    }
+                }).filter(p => p !== '');
+
+                // 拼接
+                let result = normalized.join('/');
+
+                // 如果原始第一个路径是根路径，确保结果以 / 开头
+                if (startsWithRoot && result !== '') {
+                    result = '/' + result.replace(/^\/+/, '');
+                }
+
+                return result || (startsWithRoot ? '/' : '');
+            }
+            return joinPath(window.BK_STATIC_URL, src);
+        }
+        function loadScript (src) {
+            const script = document.createElement('script');
+            script.src = window.__loadAssetsUrl__(src);
+            document.body.appendChild(script);
+        }
+        function loadStyle (href) {
+            const link = document.createElement('link');
+            link.type = "text/css";
+            link.rel = "stylesheet";
+            link.href = window.__loadAssetsUrl__(href);
+            document.head.appendChild(link);
+        }
+
     </script>
     <script src="/ui/libs/bk-magic-vue/bk-magic-vue.min.js"></script>
+    <script>
+        <% for (var chunk of htmlWebpackPlugin.files.js) { %>
+            loadScript("<%= chunk %>");
+            <% } %>
+        <% for (var chunk of htmlWebpackPlugin.files.css) { %>
+            loadStyle("<%= chunk %>");
+            <% } %>
+    </script>
 </body>
 </html>
