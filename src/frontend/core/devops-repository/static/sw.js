@@ -3,6 +3,7 @@ const cacheName = 'CPack-v1'
 let BK_STATIC_URL = '/ui/' // 默认值
 
 self.addEventListener('message', event => {
+    console.log(event.data)
     if (event.data.type === 'SET_CONFIG') {
         BK_STATIC_URL = event.data.config.BK_STATIC_URL
     }
