@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="/bkfile/ui/CPack.webmanifest" />
-    <script src="/bkfile/ui/libs/vue.min.js"></script>
-    <script src="/bkfile/ui/libs/vuex.min.js"></script>
-    <script src="/bkfile/ui/libs/vue-router.min.js"></script>
-    <script src="/bkfile/ui/libs/jsencrypt.min.js"></script>
-    <script src="/bkfile/ui/watermark.js"></script>
-    <link rel='preload' as='script' href="/bkfile/ui/libs/bk-magic-vue/bk-magic-vue.min.js" />
-    <link href="/bkfile/ui/libs/bk-magic-vue/bk-magic-vue.min.css" rel="stylesheet">
-    <link href="/bkfile/ui/iconfont.css" rel="stylesheet">
+    <link rel="manifest" href="__BK_REPO_SUBPATH__ui/CPack.webmanifest" />
+    <script src="__BK_REPO_SUBPATH__ui/libs/vue.min.js"></script>
+    <script src="__BK_REPO_SUBPATH__ui/libs/vuex.min.js"></script>
+    <script src="__BK_REPO_SUBPATH__ui/libs/vue-router.min.js"></script>
+    <script src="__BK_REPO_SUBPATH__ui/libs/jsencrypt.min.js"></script>
+    <script src="__BK_REPO_SUBPATH__ui/watermark.js"></script>
+    <link rel='preload' as='script' href="__BK_REPO_SUBPATH__ui/libs/bk-magic-vue/bk-magic-vue.min.js" />
+    <link href="__BK_REPO_SUBPATH__ui/libs/bk-magic-vue/bk-magic-vue.min.css" rel="stylesheet">
+    <link href="__BK_REPO_SUBPATH__ui/iconfont.css" rel="stylesheet">
     <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
 <body>
     <script>
         // 子路径
-        var BK_SUBPATH = '/bkfile/'
+        var BK_SUBPATH = '__BK_REPO_SUBPATH__' || '/'
         window.BK_SUBPATH = BK_SUBPATH === '/' ? '' : BK_SUBPATH
-        window.BK_STATIC_URL = BK_SUBPATH === '/' ? '/ui' : BK_SUBPATH + 'ui'
+        window.BK_STATIC_URL = BK_SUBPATH === '/' ? '/ui/' : BK_SUBPATH + 'ui/'
 
         // 请求svg图标
         const ajax = new XMLHttpRequest()
-        const url = window.BK_STATIC_URL + '/sprite.svg'
+        const url = window.BK_STATIC_URL + 'sprite.svg'
         ajax.open('GET', url, true)
         ajax.onload = function (e) {
             const div = document.createElement('div')
@@ -36,7 +36,7 @@
     </script>
     <script>
         if ('serviceWorker' in navigator) {
-            const swUrl = window.BK_STATIC_URL + '/sw.js'
+            const swUrl = window.BK_STATIC_URL + 'sw.js'
             navigator.serviceWorker.register(swUrl);
         }
         function isPWA() {
@@ -252,7 +252,7 @@
         }
 
     </script>
-    <script src="/bkfile/ui/libs/bk-magic-vue/bk-magic-vue.min.js"></script>
+    <script src="__BK_REPO_SUBPATH__ui/libs/bk-magic-vue/bk-magic-vue.min.js"></script>
     <script>
         <% for (var chunk of htmlWebpackPlugin.files.js) { %>
             loadScript("<%= chunk %>");
