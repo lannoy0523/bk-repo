@@ -35,20 +35,46 @@
 
     </script>
     <script>
-        if ('serviceWorker' in navigator) {
-            const swUrl = window.BK_STATIC_URL + 'sw.js'
-            console.log(swUrl)
-            navigator.serviceWorker.register(swUrl).then(registration => {
-                // 注册完成后发送配置
-                console.log('-----------------')
-                console.log(window.BK_STATIC_URL)
-                registration.active?.postMessage({
-                    type: 'SET_CONFIG',
-                    config: {
-                        BK_STATIC_URL: window.BK_STATIC_URL
+        async function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    const swUrl = window.BK_STATIC_URL + 'sw.js'
+                    const registration = await navigator.serviceWorker.register(swUrl);
+                    console.log('Service Worker 注册成功:', registration);
+
+                    // 2. 重要：立即检查是否已激活，然后发送配置
+                    // 如果还在 installing 状态，可以直接发送，worker 中的 message 监听器已就绪
+                    if (registration.active) {
+                        // 如果已经激活，直接发送
+                        registration.active.postMessage({
+                            type: 'SET_CONFIG',
+                            config: {
+                                // 这里替换为你的实际配置获取方式
+                                BK_STATIC_URL: window.BK_STATIC_URL || '/ui/'
+                            }
+                        });
+                    } else if (registration.installing) {
+                        // 如果还在安装，发给 installing 状态的worker
+                        registration.installing.postMessage({
+                            type: 'SET_CONFIG',
+                            config: {
+                                BK_STATIC_URL: window.BK_STATIC_URL || '/ui/'
+                            }
+                        });
+                    } else if (registration.waiting) {
+                        // 如果存在等待激活的worker
+                        registration.waiting.postMessage({
+                            type: 'SET_CONFIG',
+                            config: {
+                                BK_STATIC_URL: window.BK_STATIC_URL || '/ui/'
+                            }
+                        });
                     }
-                })
-            })
+
+                } catch (error) {
+                    console.error('Service Worker 注册失败:', error);
+                }
+            }
         }
         function isPWA() {
             return ["fullscreen", "standalone", "minimal-ui"].some(

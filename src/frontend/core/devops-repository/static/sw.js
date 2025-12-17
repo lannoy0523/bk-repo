@@ -1,27 +1,42 @@
 const cacheName = 'CPack-v1'
 
 let BK_STATIC_URL = '/ui/' // 默认值
+let configReady = null // 用于等待配置的Promise
 
-self.addEventListener('message', event => {
-    console.log('------------------------')
-    console.log(event.data)
-    if (event.data.type === 'SET_CONFIG') {
-        BK_STATIC_URL = event.data.config.BK_STATIC_URL
-    }
+// 1. 创建一个“配置就绪”的Promise
+const configReadyPromise = new Promise((resolve) => {
+    configReady = resolve
 })
 
-// Installing Service Worker
-self.addEventListener('install', e => {
-    console.log(1234)
-    console.log(BK_STATIC_URL)
-    e.waitUntil(
+self.addEventListener('message', (event) => {
+    console.log('Service Worker 收到消息:', event.data)
+    if (event.data && event.data.type === 'SET_CONFIG') {
+        BK_STATIC_URL = event.data.config.BK_STATIC_URL
+        console.log('配置已更新，BK_STATIC_URL:', BK_STATIC_URL)
+        if (configReady) {
+            configReady()
+            configReady = null
+        }
+    }
+});
+
+self.addEventListener('install', (event) => {
+    console.log('Service Worker 安装开始，BK_STATIC_URL（初始值）:', BK_STATIC_URL)
+
+    event.waitUntil(
         (async () => {
+            await configReadyPromise
+
+            // 这里开始执行原本的缓存逻辑
+            const cacheName = 'my-cache-v1'
             const cache = await caches.open(cacheName)
-            await cache.addAll([
+            const urlsToCache = [
                 BK_STATIC_URL + 'fonts/bk_icons_linear.eot',
                 BK_STATIC_URL + 'fonts/bk_icons_linear.ttf',
                 BK_STATIC_URL + 'fonts/bk_icons_linear.woff'
-            ])
+            ]
+            await cache.addAll(urlsToCache)
+            console.log('字体文件缓存完成')
         })()
     )
 })
