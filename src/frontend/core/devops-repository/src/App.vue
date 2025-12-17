@@ -1,6 +1,6 @@
 <template>
     <div class="bkrepo-main flex-column">
-        <notice-component v-if="!ciMode && !isSubSaas" api-url="/web/repository/api/notice" />
+        <notice-component v-if="!ciMode && !isSubSaas" :api-url="window.BK_SUBPATH + 'web/repository/api/notice'" />
         <Header ref="head" v-if="!ciMode && !isSubSaas" />
         <router-view class="bkrepo-main-container"></router-view>
         <ConfirmDialog />
