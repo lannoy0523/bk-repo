@@ -37,7 +37,15 @@
     <script>
         if ('serviceWorker' in navigator) {
             const swUrl = window.BK_STATIC_URL + 'sw.js'
-            navigator.serviceWorker.register(swUrl);
+            navigator.serviceWorker.register(swUrl).then(registration => {
+                // 注册完成后发送配置
+                registration.active?.postMessage({
+                    type: 'SET_CONFIG',
+                    config: {
+                        BK_STATIC_URL: window.BK_STATIC_URL
+                    }
+                })
+            })
         }
         function isPWA() {
             return ["fullscreen", "standalone", "minimal-ui"].some(

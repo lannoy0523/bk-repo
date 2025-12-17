@@ -1,14 +1,22 @@
 const cacheName = 'CPack-v1'
 
+let BK_STATIC_URL = '/ui/'; // 默认值
+
+self.addEventListener('message', event => {
+    if (event.data.type === 'SET_CONFIG') {
+        BK_STATIC_URL = event.data.config.BK_STATIC_URL;
+    }
+});
+
 // Installing Service Worker
 self.addEventListener('install', e => {
     e.waitUntil(
         (async () => {
             const cache = await caches.open(cacheName)
             await cache.addAll([
-                window.BK_STATIC_URL + 'fonts/bk_icons_linear.eot',
-                window.BK_STATIC_URL + 'fonts/bk_icons_linear.ttf',
-                window.BK_STATIC_URL + 'fonts/bk_icons_linear.woff'
+                BK_STATIC_URL + 'fonts/bk_icons_linear.eot',
+                BK_STATIC_URL + 'fonts/bk_icons_linear.ttf',
+                BK_STATIC_URL + 'fonts/bk_icons_linear.woff'
             ])
         })()
     )
