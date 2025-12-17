@@ -132,6 +132,6 @@ export function copyToClipboard (text) {
     // }
 }
 
-const publicPath = window.BK_REPO_SUBPATH
+const publicPath = window.BK_SUBPATH
 
-export const routeBase = rootPath === '/' ? publicPath + '/ui' : publicPath + rootPath
+export const routeBase = rootPath === '/' ? publicPath + 'ui' : publicPath + rootPath
