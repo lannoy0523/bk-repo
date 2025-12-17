@@ -33,6 +33,24 @@
         }
         ajax.send()
 
+        // 创建 style 元素
+        const style = document.createElement('style')
+        style.type = 'text/css';
+
+        // 设置 CSS 内容
+        style.textContent = `
+                @font-face {
+        font-family: 'bk-icons-linear';
+        src: url('__BK_REPO_SUBPATH__ui/fonts/bk_icons_linear.eot');
+        src: url('__BK_REPO_SUBPATH__ui/fonts/bk_icons_linear.eot?#iefix') format('embedded-opentype'),
+        url('__BK_REPO_SUBPATH__ui/fonts/bk_icons_linear.ttf') format('truetype'),
+        url('__BK_REPO_SUBPATH__ui/fonts/bk_icons_linear.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+        }`
+        // 添加到 head
+        document.head.appendChild(style);
+
     </script>
     <script>
         async function registerServiceWorker() {
