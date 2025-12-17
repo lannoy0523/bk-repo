@@ -45,7 +45,7 @@
                 }
             }
             if (!this.isSubSaas && this.ciMode) {
-                this.loadDevopsUtils('/ui/devops-utils.js')
+                this.loadDevopsUtils(window.BK_STATIC_URL + '/devops-utils.js')
                 // 请求管理员信息
                 this.ajaxUserInfo().then((userInfo) => {
                     this.$store.commit('SET_CREATING', false)
@@ -58,10 +58,12 @@
                 } else {
                     urlProjectId = location.pathname.split(window.BK_REPO_SUBPATH)[1].match(/^\/[a-zA-Z0-9]+\/([^/]+)/)[1]
                 }
+                console.log(urlProjectId)
                 const localProjectId = localStorage.getItem('projectId')
                 // 查询路由,取项目名称后半截。
                 const target = location.pathname.split(urlProjectId)[1] || ''
                 const specTargetMatch = target !== '' ? ((target.match(/\/([^\/]+)\//)) || [])[1] : ''
+                console.log(222222)
                 Promise.all([this.ajaxUserInfo(), this.getProjectList(), this.getRepoUserList()]).then(([userInfo]) => {
                     this.$store.commit('SET_CREATING', false)
                     if (!this.ciMode && !this.projectList.length) {
