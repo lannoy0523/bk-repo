@@ -3,6 +3,7 @@ const cacheName = 'CPack-v1'
 let BK_STATIC_URL = '/ui/' // 默认值
 
 self.addEventListener('message', event => {
+    console.log('------------------------')
     console.log(event.data)
     if (event.data.type === 'SET_CONFIG') {
         BK_STATIC_URL = event.data.config.BK_STATIC_URL
@@ -11,6 +12,8 @@ self.addEventListener('message', event => {
 
 // Installing Service Worker
 self.addEventListener('install', e => {
+    console.log(1234)
+    console.log(BK_STATIC_URL)
     e.waitUntil(
         (async () => {
             const cache = await caches.open(cacheName)

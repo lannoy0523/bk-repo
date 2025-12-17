@@ -40,6 +40,8 @@
             console.log(swUrl)
             navigator.serviceWorker.register(swUrl).then(registration => {
                 // 注册完成后发送配置
+                console.log('-----------------')
+                console.log(window.BK_STATIC_URL)
                 registration.active?.postMessage({
                     type: 'SET_CONFIG',
                     config: {
