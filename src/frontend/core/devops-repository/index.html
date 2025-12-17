@@ -93,6 +93,7 @@
         }
     </script>
     <script>
+        window.addEventListener('DOMContentLoaded', registerServiceWorker)
         var PAAS_SERVICE_URL = '__BK_HTTP_SCHEMA__://__BK_REPO_PAAS_FQDN__'
         var DEVOPS_SITE_URL = '__BK_HTTP_SCHEMA__://__BK_CI_FQDN__'
         var LOGIN_SERVICE_URL = /^https?/.test(PAAS_SERVICE_URL)
