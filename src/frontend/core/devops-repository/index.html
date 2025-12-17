@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="BK_REPO_SUBPATHui/favicon.ico" />
-    <link rel="manifest" href="BK_REPO_SUBPATHui/CPack.webmanifest" />
-    <script src="BK_REPO_SUBPATHui/libs/vue.min.js"></script>
-    <script src="BK_REPO_SUBPATHui/libs/vuex.min.js"></script>
-    <script src="BK_REPO_SUBPATHui/libs/vue-router.min.js"></script>
-    <script src="BK_REPO_SUBPATHui/libs/jsencrypt.min.js"></script>
-    <script src="BK_REPO_SUBPATHui/watermark.js"></script>
-    <link rel='preload' as='script' href="BK_REPO_SUBPATHui/libs/bk-magic-vue/bk-magic-vue.min.js" />
-    <link href="BK_REPO_SUBPATHui/libs/bk-magic-vue/bk-magic-vue.min.css" rel="stylesheet">
-    <link href="BK_REPO_SUBPATHui/iconfont.css" rel="stylesheet">
+    <link rel="icon" href="__BK_REPO_SUBPATH__ui/favicon.ico" />
+    <link rel="manifest" href="__BK_REPO_SUBPATH__ui/CPack.webmanifest" />
+    <script src="__BK_REPO_SUBPATH__ui/libs/vue.min.js"></script>
+    <script src="__BK_REPO_SUBPATH__ui/libs/vuex.min.js"></script>
+    <script src="__BK_REPO_SUBPATH__ui/libs/vue-router.min.js"></script>
+    <script src="__BK_REPO_SUBPATH__ui/libs/jsencrypt.min.js"></script>
+    <script src="__BK_REPO_SUBPATH__ui/watermark.js"></script>
+    <link rel='preload' as='script' href="__BK_REPO_SUBPATH__ui/libs/bk-magic-vue/bk-magic-vue.min.js" />
+    <link href="__BK_REPO_SUBPATH__ui/libs/bk-magic-vue/bk-magic-vue.min.css" rel="stylesheet">
+    <link href="__BK_REPO_SUBPATH__ui/iconfont.css" rel="stylesheet">
     <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
 <body>
     <script>
         // 子路径
-        var BK_SUBPATH = 'BK_REPO_SUBPATH' || '/'
+        var BK_SUBPATH = '__BK_REPO_SUBPATH__' || '/'
 
         window.BK_SUBPATH = BK_SUBPATH === '/' ? '' : BK_SUBPATH
         window.BK_STATIC_URL = BK_SUBPATH === '/' ? '/ui' : BK_SUBPATH + 'ui'
@@ -254,7 +254,7 @@
         }
 
     </script>
-    <script src="BK_REPO_SUBPATHui/libs/bk-magic-vue/bk-magic-vue.min.js"></script>
+    <script src="__BK_REPO_SUBPATH__ui/libs/bk-magic-vue/bk-magic-vue.min.js"></script>
     <script>
         <% for (var chunk of htmlWebpackPlugin.files.js) { %>
             loadScript("<%= chunk %>");
