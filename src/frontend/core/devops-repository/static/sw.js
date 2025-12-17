@@ -6,9 +6,9 @@ self.addEventListener('install', e => {
         (async () => {
             const cache = await caches.open(cacheName)
             await cache.addAll([
-                '/ui/fonts/bk_icons_linear.eot',
-                '/ui/fonts/bk_icons_linear.ttf',
-                '/ui/fonts/bk_icons_linear.woff'
+                window.BK_STATIC_URL + 'fonts/bk_icons_linear.eot',
+                window.BK_STATIC_URL + 'fonts/bk_icons_linear.ttf',
+                window.BK_STATIC_URL + 'fonts/bk_icons_linear.woff'
             ])
         })()
     )

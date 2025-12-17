@@ -3,7 +3,7 @@ import axios from 'axios'
 import Vue from 'vue'
 
 const request = axios.create({
-    baseURL: `${location.origin}/bkfile/web`,
+    baseURL: `${location.origin}/${window.BK_STATIC_URL}web`,
     validateStatus: status => {
         if (status > 400) {
             console.warn(`HTTP 请求出错 status: ${status}`)
