@@ -57,9 +57,8 @@
                 if (window.BK_SUBPATH === '/') {
                     urlProjectId = (location.pathname.match(/^\/[a-zA-Z0-9]+\/([^/]+)/) || [])[1]
                 } else {
-                    urlProjectId = location.pathname.split(window.BK_REPO_SUBPATH)[1].match(/^\/[a-zA-Z0-9]+\/([^/]+)/)[1]
+                    urlProjectId = location.pathname.split(window.BK_REPO_SUBPATH)[1].match(/^[a-zA-Z0-9]+\/([^/]+)/)[1]
                 }
-                console.log(urlProjectId)
                 const localProjectId = localStorage.getItem('projectId')
                 // 查询路由,取项目名称后半截。
                 const target = location.pathname.split(urlProjectId)[1] || ''
