@@ -1,6 +1,6 @@
 <template>
     <div class="bkrepo-main flex-column">
-        <notice-component v-if="!ciMode && !isSubSaas" :api-url="window.BK_SUBPATH + 'web/repository/api/notice'" />
+        <notice-component v-if="!ciMode && !isSubSaas" :api-url="noticeUrl" />
         <Header ref="head" v-if="!ciMode && !isSubSaas" />
         <router-view class="bkrepo-main-container"></router-view>
         <ConfirmDialog />
@@ -23,7 +23,8 @@
         mixins: [mixin],
         data () {
             return {
-                ciMode: MODE_CONFIG === 'ci'
+                ciMode: MODE_CONFIG === 'ci',
+                noticeUrl: window.BK_SUBPATH + 'web/repository/api/notice'
             }
         },
         computed: {
