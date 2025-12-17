@@ -53,12 +53,12 @@
                     userInfo.admin && this.getClusterList()
                 })
             } else {
-                const urlProjectId = ''
-                // if (window.BK_SUBPATH === '/') {
-                //     urlProjectId = (location.pathname.match(/^\/[a-zA-Z0-9]+\/([^/]+)/) || [])[1]
-                // } else {
-                //     urlProjectId = location.pathname.split(window.BK_REPO_SUBPATH)[1].match(/^\/[a-zA-Z0-9]+\/([^/]+)/)[1]
-                // }
+                let urlProjectId = ''
+                if (window.BK_SUBPATH === '/') {
+                    urlProjectId = (location.pathname.match(/^\/[a-zA-Z0-9]+\/([^/]+)/) || [])[1]
+                } else {
+                    urlProjectId = location.pathname.split(window.BK_REPO_SUBPATH)[1].match(/^\/[a-zA-Z0-9]+\/([^/]+)/)[1]
+                }
                 console.log(urlProjectId)
                 const localProjectId = localStorage.getItem('projectId')
                 // 查询路由,取项目名称后半截。
