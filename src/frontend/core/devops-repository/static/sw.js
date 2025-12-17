@@ -1,12 +1,12 @@
 const cacheName = 'CPack-v1'
 
-let BK_STATIC_URL = '/ui/'; // 默认值
+let BK_STATIC_URL = '/ui/' // 默认值
 
 self.addEventListener('message', event => {
     if (event.data.type === 'SET_CONFIG') {
-        BK_STATIC_URL = event.data.config.BK_STATIC_URL;
+        BK_STATIC_URL = event.data.config.BK_STATIC_URL
     }
-});
+})
 
 // Installing Service Worker
 self.addEventListener('install', e => {
