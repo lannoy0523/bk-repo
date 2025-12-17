@@ -3,23 +3,30 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/ui/favicon.ico" />
-    <link rel="manifest" href="/ui/CPack.webmanifest" />
-    <script src="/ui/libs/vue.min.js"></script>
-    <script src="/ui/libs/vuex.min.js"></script>
-    <script src="/ui/libs/vue-router.min.js"></script>
-    <script src="/ui/libs/jsencrypt.min.js"></script>
-    <script src="/ui/watermark.js"></script>
-    <link rel='preload' as='script' href="/ui/libs/bk-magic-vue/bk-magic-vue.min.js" />
-    <link href="/ui/libs/bk-magic-vue/bk-magic-vue.min.css" rel="stylesheet">
-    <link href="/ui/iconfont.css" rel="stylesheet">
+    <link rel="icon" href="BK_REPO_SUBPATH/ui/favicon.ico" />
+    <link rel="manifest" href="BK_REPO_SUBPATH/ui/CPack.webmanifest" />
+    <script src="BK_REPO_SUBPATH/ui/libs/vue.min.js"></script>
+    <script src="BK_REPO_SUBPATH/ui/libs/vuex.min.js"></script>
+    <script src="BK_REPO_SUBPATH/ui/libs/vue-router.min.js"></script>
+    <script src="BK_REPO_SUBPATH/ui/libs/jsencrypt.min.js"></script>
+    <script src="BK_REPO_SUBPATH/ui/watermark.js"></script>
+    <link rel='preload' as='script' href="BK_REPO_SUBPATH/ui/libs/bk-magic-vue/bk-magic-vue.min.js" />
+    <link href="BK_REPO_SUBPATH/ui/libs/bk-magic-vue/bk-magic-vue.min.css" rel="stylesheet">
+    <link href="BK_REPO_SUBPATH/ui/iconfont.css" rel="stylesheet">
     <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
 <body>
     <script>
+        // 子路径
+        var BK_REPO_SUBPATH = 'BK_REPO_SUBPATH' || '/'
+
+        window.BK_REPO_SUBPATH = BK_REPO_SUBPATH === '/' ? '' : BK_REPO_SUBPATH
+        window.BK_STATIC_URL = BK_REPO_SUBPATH === '/' ? '/ui' : BK_REPO_SUBPATH + '/ui'
+
         // 请求svg图标
         const ajax = new XMLHttpRequest()
-        ajax.open('GET', '/ui/sprite.svg', true)
+        const url = window.BK_STATIC_URL + 'sprite.svg'
+        ajax.open('GET', url, true)
         ajax.onload = function (e) {
             const div = document.createElement('div')
             div.setAttribute('style', 'position: absolute; width: 0; height: 0; overflow: hidden;')
@@ -27,10 +34,12 @@
             document.body.prepend(div)
         }
         ajax.send()
+
     </script>
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/ui/sw.js');
+            const swUrl = window.BK_STATIC_URL + 'sw.js'
+            navigator.serviceWorker.register(swUrl);
         }
         function isPWA() {
             return ["fullscreen", "standalone", "minimal-ui"].some(
@@ -73,15 +82,8 @@
                             + ('__BK_REPO_PAAS_FQDN__').split("://")[1] + '/api/bk-user-web/prod'
         // 是否开启多租户模式
         var BK_REPO_ENABLE_MULTI_TENANT_MODE = '__BK_REPO_ENABLE_MULTI_TENANT_MODE__' || 'false'
-
-        // 子路径
-        var BK_REPO_SUBPATH = '/bkfile'
     </script>
     <script>
-
-        window.BK_REPO_SUBPATH = BK_REPO_SUBPATH === '/' ? '' : BK_REPO_SUBPATH
-        window.BK_STATIC_URL = BK_REPO_SUBPATH === '/' ? '/ui' : BK_REPO_SUBPATH + '/ui'
-
         const inIframe = self !== top
         // iframe内使用ci模式
         if (MODE_CONFIG === 'saas' && inIframe) {
@@ -252,7 +254,7 @@
         }
 
     </script>
-    <script src="/ui/libs/bk-magic-vue/bk-magic-vue.min.js"></script>
+    <script src="BK_REPO_SUBPATH/ui/libs/bk-magic-vue/bk-magic-vue.min.js"></script>
     <script>
         <% for (var chunk of htmlWebpackPlugin.files.js) { %>
             loadScript("<%= chunk %>");
