@@ -153,3 +153,11 @@ Return the value of authorization
 {{ printf "/" }}
 {{- end -}}
 {{- end -}}
+
+{{- define "bkrepo.webSubPath" -}}
+{{- if eq "subpath" .Values.bkWebSiteAccess.mode -}}
+{{ printf "%s/" .Values.bkWebSiteAccess.subPath }}
+{{- else -}}
+{{ printf "" }}
+{{- end -}}
+{{- end -}}
