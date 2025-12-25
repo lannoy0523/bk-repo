@@ -92,6 +92,7 @@
             }
         },
         mounted () {
+            console.log('开始设置权限，mount触发')
             this.checkPM({ projectId: this.$route.params.projectId })
         },
         methods: {

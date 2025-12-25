@@ -61,6 +61,7 @@ export default {
                 window.globalVue.$on('change::$currentProjectId', data => { // 蓝鲸Devops选择项目时切换
                     localStorage.setItem('projectId', data.currentProjectId)
                     if (this.projectId !== data.currentProjectId) {
+                        console.log('开始设置权限，非mount触发')
                         this.checkPM({ projectId: data.currentProjectId })
                         this.goHome(data.currentProjectId)
                     }
