@@ -92,8 +92,9 @@
             }
         },
         mounted () {
-            console.log('开始设置权限，mount触发')
-            this.checkPM({ projectId: this.$route.params.projectId })
+            console.log('开始设置权限，mounted触发')
+            const projectId = this.$route.params.projectId ? this.$route.params.projectId : localStorage.getItem('projectId')
+            this.checkPM({ projectId: projectId })
         },
         methods: {
             ...mapActions([
