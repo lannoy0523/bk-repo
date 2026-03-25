@@ -17,7 +17,7 @@ export default defineConfig(({ mode, command }) => {
   const envDist = process.env.dist || 'frontend'
 
   // 从环境变量中获取 VITE_APP_BASE_DIR，如果没有则使用默认值 'devops-op'
-  const baseDir = env.VITE_APP_BASE_DIR || 'devops-op'
+  const baseDir = env.VITE_APP_BASE_DIR || '/'
 
   // 使用相对路径，避免 monaco-editor 插件路径拼接错误
   const dist = `../../${envDist}/${baseDir}`
@@ -26,7 +26,7 @@ export default defineConfig(({ mode, command }) => {
   const isProduction = process.env.ENV !== 'development'
 
   return {
-    base: '/',
+    base: baseDir ? `/${baseDir}/` : '/',
     root: process.cwd(),
     publicDir: 'public',
     build: {
@@ -90,93 +90,11 @@ export default defineConfig(({ mode, command }) => {
       open: true,
       force: true,
       proxy: {
-        '/web/auth': {
-          target: 'http://127.0.0.1:25902',
-          secure: true,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/web\/auth/, ''),
-          configure: (proxy, options) => {
-            proxy.on('proxyReq', (proxyReq, req, res) => {
-              proxyReq.setHeader('Authorization', 'Basic YWRtaW46cGFzc3dvcmQ=')
-            })
-          }
-        },
-        '/web/repository': {
-          target: 'http://127.0.0.1:25901',
-          secure: true,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/web\/repository/, ''),
-          configure: (proxy, options) => {
-            proxy.on('proxyReq', (proxyReq, req, res) => {
-              proxyReq.setHeader('Authorization', 'Basic YWRtaW46cGFzc3dvcmQ=')
-            })
-          }
-        },
-        '/web/generic': {
-          target: 'http://127.0.0.1:25801',
-          secure: true,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/web\/generic/, ''),
-          configure: (proxy, options) => {
-            proxy.on('proxyReq', (proxyReq, req, res) => {
-              proxyReq.setHeader('Authorization', 'Basic YWRtaW46cGFzc3dvcmQ=')
-            })
-          }
-        },
-        '/web/helm': {
-          target: 'http://127.0.0.1:25806',
-          secure: true,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/web\/helm/, ''),
-          configure: (proxy, options) => {
-            proxy.on('proxyReq', (proxyReq, req, res) => {
-              proxyReq.setHeader('Authorization', 'Basic YWRtaW46cGFzc3dvcmQ=')
-            })
-          }
-        },
-        '/web/job': {
-          target: 'http://127.0.0.1:25907',
-          secure: true,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/web\/job/, ''),
-          configure: (proxy, options) => {
-            proxy.on('proxyReq', (proxyReq, req, res) => {
-              proxyReq.setHeader('Authorization', 'Basic YWRtaW46cGFzc3dvcmQ=')
-            })
-          }
-        },
-        '/web/opdata': {
-          target: 'http://127.0.0.1:25904',
-          secure: true,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/web\/opdata/, ''),
-          configure: (proxy, options) => {
-            proxy.on('proxyReq', (proxyReq, req, res) => {
-              proxyReq.setHeader('Authorization', 'Basic YWRtaW46cGFzc3dvcmQ=')
-            })
-          }
-        },
-        '/web/analyst': {
-          target: 'http://127.0.0.1:25814',
-          secure: true,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/web\/analyst/, ''),
-          configure: (proxy, options) => {
-            proxy.on('proxyReq', (proxyReq, req, res) => {
-              proxyReq.setHeader('Authorization', 'Basic YWRtaW46cGFzc3dvcmQ=')
-            })
-          }
-        },
-        '/web/replication': {
-          target: 'http://127.0.0.1:25903',
-          secure: true,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/web\/replication/, ''),
-          configure: (proxy, options) => {
-            proxy.on('proxyReq', (proxyReq, req, res) => {
-              proxyReq.setHeader('Authorization', 'Basic YWRtaW46cGFzc3dvcmQ=')
-            })
-          }
+        // 用于处理本地开发时跨域问题
+        '/web': {
+          target: 'http://bkrepo.example.com', // 接口域名
+          secure: false, // 如果是https接口，需要配置这个参数
+          changeOrigin: true // 是否跨域
         }
       }
     },
